@@ -1,0 +1,68 @@
+[
+  {
+    "id": "post_1",
+    "permalink": "https://www.instagram.com/strata.studio/",
+    "media_type": "IMAGE",
+    "media_url":      "https://picsum.photos/seed/strata-camlica-cepheler-9821/1400/720",
+    "thumbnail_url":  "https://picsum.photos/seed/strata-camlica-cepheler-9821/1400/720",
+    "caption":   "Çamlıca Sırt Evleri — terra cotta cephe karoları yerinde. Yamacın güney rüzgârı bu kademelenmeyi haftalar içinde dövecek.",
+    "timestamp": "2026-05-05T11:18:00+03:00",
+    "like_count": 312,
+    "comments_count": 24
+  },
+  {
+    "id": "post_2",
+    "permalink": "https://www.instagram.com/strata.studio/",
+    "media_type": "IMAGE",
+    "media_url":     "https://picsum.photos/seed/strata-atolye-9421/720/1400",
+    "thumbnail_url": "https://picsum.photos/seed/strata-atolye-9421/720/1400",
+    "caption":   "Salı, 09.43 — atölyede. Beykoz dosyasının ön projesi onaylandı; üç hafta erken.",
+    "timestamp": "2026-05-02T09:42:00+03:00",
+    "like_count": 184,
+    "comments_count": 11
+  },
+  {
+    "id": "post_3",
+    "permalink": "https://www.instagram.com/strata.studio/",
+    "media_type": "CAROUSEL_ALBUM",
+    "media_url":     "https://picsum.photos/seed/strata-bomonti-7732/900/900",
+    "thumbnail_url": "https://picsum.photos/seed/strata-bomonti-7732/900/900",
+    "caption":   "Bomonti'de güneşin önümüzdeki sekiz hafta ofise nasıl düştüğüne dair çalışma. Kuzey ışığı Çarşamba'dan itibaren güçleniyor.",
+    "timestamp": "2026-04-30T15:05:00+03:00",
+    "like_count": 156,
+    "comments_count": 8
+  },
+  {
+    "id": "post_4",
+    "permalink": "https://www.instagram.com/strata.studio/",
+    "media_type": "IMAGE",
+    "media_url":     "https://picsum.photos/seed/strata-cunda-3198/900/900",
+    "thumbnail_url": "https://picsum.photos/seed/strata-cunda-3198/900/900",
+    "caption":   "Cunda Kayalı'nın ilk dönüm noktası — çatı izolasyonu tamamlandı. Mart ayında ilk konaklamayı bekliyoruz.",
+    "timestamp": "2026-04-23T18:30:00+03:00",
+    "like_count": 247,
+    "comments_count": 19
+  },
+  {
+    "id": "post_5",
+    "permalink": "https://www.instagram.com/strata.studio/",
+    "media_type": "IMAGE",
+    "media_url":     "https://picsum.photos/seed/strata-selcuklu-5510/1400/720",
+    "thumbnail_url": "https://picsum.photos/seed/strata-selcuklu-5510/1400/720",
+    "caption":   "Selçuklu köprü tabliyesini 0,4 mm hassasiyetle taradık. Restorasyon dosyası şubatta Anıtlar Kurulu'nda.",
+    "timestamp": "2026-04-16T12:00:00+03:00",
+    "like_count": 421,
+    "comments_count": 33
+  },
+  {
+    "id": "post_6",
+    "permalink": "https://www.instagram.com/strata.studio/",
+    "media_type": "VIDEO",
+    "media_url":     "https://picsum.photos/seed/strata-kuzguncuk-2842/900/900",
+    "thumbnail_url": "https://picsum.photos/seed/strata-kuzguncuk-2842/900/900",
+    "caption":   "Kuzguncuk Çift Konak hizmete açıldı. Teslimden iki yıl sonra ilk denetim ziyaretimizi bekliyoruz.",
+    "timestamp": "2026-04-02T10:00:00+03:00",
+    "like_count": 89,
+    "comments_count": 6
+  }
+]

@@ -1,0 +1,237 @@
+{
+  "version": 2,
+  "updatedAt": "2026-05-09T10:00:00+03:00",
+
+  "brand": {
+    "word": "STRATA",
+    "subtitle": "Mimarlık & İnşaat"
+  },
+
+  "hero": {
+    "eyebrow": "Atölye 002 · İstanbul",
+    "year": "MMXXVI",
+    "titleLine1": "Çizgiyle başlar,",
+    "titleLine2": "mekânla bitmez.",
+    "lede": "STRATA, ilk eskizden anahtar teslime kadar bütün aşamaları aynı atölyenin içinde yürüten bir mimarlık ve inşaat ofisidir. 23 yıl. 184 proje. Tek bir el."
+  },
+
+  "approach": {
+    "kicker": "Yaklaşım — 01",
+    "title": "Bir proje, bir <em>imza,</em><br/>tek bir ekibin emaneti.",
+    "lede": "Konsept eskizinden saha denetimine kadar tüm aşamaları aynı atölye yürütür. Tasarımı çizen el, betonu döken eli tanır. Aradaki mesafe ne kadar kısaysa, sonuç o kadar bütünleşik olur — bizim inancımız budur.",
+    "points": [
+      { "title": "Tek atölye, dört aşama.", "body": "Mimari tasarım, iç mimari, uygulama ve teslim sonrası takip — hepsi aynı ekibin sorumluluğunda." },
+      { "title": "Müşteri ilişkisi, yıl ölçeğinde.", "body": "Mevcut müşterilerimizin ortalama proje sayısı 2,3. Bir kez çalışmaya başlayan ekipler genelde geri döner." },
+      { "title": "Şantiyeden öğrenen tasarım.", "body": "Çizim masasında yazılan detayların yarısı, sahada düzeltilmiş detaylardır. Geri besleme döngüsünü kısa tutarız." }
+    ]
+  },
+
+  "services": {
+    "kicker": "Hizmetler — 02",
+    "title": "Altı uzmanlık,<br/>tek bir sözleşme.",
+    "intro": "Hizmetleri ayrı ayrı veya kombine alabilirsiniz. Anahtar teslim çalıştığımız projelerde altısı da iç içe çalışır.",
+    "list": [
+      { "num": "01", "title": "Mimari Tasarım", "body": "Konut, ofis, otel, kültür ve kamu yapıları. Konsept eskizinden tatbikat projesine kadar bütüncül süreç.", "meta": "Konut · Ofis · Otel · Kültür · Kamu" },
+      { "num": "02", "title": "İç Mimari", "body": "Mekânın iskeletinden mobilyasına kadar bütünleşik tasarım. Mimari ile aynı kararla, aynı malzeme dilinde.", "meta": "Konsept · Detay · Mobilya · Aydınlatma" },
+      { "num": "03", "title": "İnşaat & Uygulama", "body": "Anahtar teslim yapım. Saha kurulumundan günlük denetime, kalite kontrolünden taşeron koordinasyonuna.", "meta": "Anahtar teslim · Yapım · Denetim · Kalite" },
+      { "num": "04", "title": "Kentsel & Peyzaj", "body": "Yapı çevresindeki açık alanların plan ve detayı. Su, sert zemin, bitki, aydınlatma — yapıyla aynı dilde tasarım.", "meta": "Plan · Sert zemin · Peyzaj · Aydınlatma" },
+      { "num": "05", "title": "Restorasyon", "body": "Tescilli yapıların rölöve, restitüsyon ve restorasyonu. Anıtlar Kurulu süreçlerinde tam dosya yönetimi.", "meta": "Rölöve · Restitüsyon · Restorasyon · Dosya" },
+      { "num": "06", "title": "Proje Yönetimi", "body": "Bütçe, takvim ve taşeron koordinasyonu. Bağımsız müşavir hizmeti veya anahtar teslim paketin parçası.", "meta": "Bütçe · Takvim · Müşavirlik · Koordinasyon" }
+    ]
+  },
+
+  "featured": {
+    "kicker": "Öne Çıkan — 03",
+    "name": "Çamlıca Sırt Evleri",
+    "cover": {
+      "url": "https://picsum.photos/seed/camlica-sirt-evleri-2641/1600/1000",
+      "framing": null
+    },
+    "meta": [
+      { "label": "Tip",     "value": "Konut · 3 villa" },
+      { "label": "Konum",   "value": "Çamlıca, İstanbul" },
+      { "label": "Alan",    "value": "1.840 m²" },
+      { "label": "Yıl",     "value": "2023 — 2024" },
+      { "label": "Hizmet",  "value": "Mimari · İç Mimari · Uygulama" },
+      { "label": "Statü",   "value": "Tamamlandı" }
+    ],
+    "description": "Yamaca sırtını yaslayan üç villa, eğimi çözmek yerine onunla anlaşan bir tipoloji üretir. Cephe; ham beton, dövme bakır panel ve dikey sedir kaplamanın bir araya gelişiyle, mevsime göre ısınan bir doku oluşturur. İç mekân tasarımı ve uygulama da aynı atölyede yürütüldü.",
+    "gallery": [
+      { "url": "https://picsum.photos/seed/camlica-1-bahce/1600/1000", "caption": "Bahçe cephesi — alacakaranlık" },
+      { "url": "https://picsum.photos/seed/camlica-2-salon/1600/1000", "caption": "Açık salon ve mutfak — kuzey ışığı" },
+      { "url": "https://picsum.photos/seed/camlica-3-detay/1600/1100", "caption": "Beton-bakır cephe detayı" },
+      { "url": "https://picsum.photos/seed/camlica-4-merdiven/1100/1600", "caption": "İç merdiven — sedir kaplama" },
+      { "url": "https://picsum.photos/seed/camlica-5-havuz/1600/1000", "caption": "Yatay havuz — gece görünümü" }
+    ]
+  },
+
+  "archive": {
+    "kicker": "Arşiv — 04",
+    "title": "Seçilmiş projeler.",
+    "intro": "Son üç yılın sekiz projesi. Tam liste için ofis ile iletişime geçin — basılı katalogda 184 başlık."
+  },
+
+  "projects": [
+    {
+      "id": "proj_camlica",
+      "name": "Çamlıca Sırt Evleri",
+      "type": "Konut · 3 villa · 1.840 m²",
+      "year": "2024",
+      "location": "İstanbul",
+      "cover": { "url": "https://picsum.photos/seed/camlica-cover-9134/1200/800", "framing": null },
+      "gallery": [
+        { "url": "https://picsum.photos/seed/camlica-g1/1600/1000", "caption": "Vaziyet — yamaç hizalanması" },
+        { "url": "https://picsum.photos/seed/camlica-g2/1600/1000", "caption": "Cephe çalışması — ham beton" },
+        { "url": "https://picsum.photos/seed/camlica-g3/1600/1000", "caption": "İç mekân — açık plan" },
+        { "url": "https://picsum.photos/seed/camlica-g4/1100/1600", "caption": "Detay — sedir + bakır" }
+      ]
+    },
+    {
+      "id": "proj_beykoz",
+      "name": "Beykoz Sahil Köşkü Restorasyonu",
+      "type": "Restorasyon · 19. yy köşk · 2.300 m²",
+      "year": "2023",
+      "location": "İstanbul",
+      "cover": { "url": "https://picsum.photos/seed/beykoz-cover-3217/1200/800", "framing": null },
+      "gallery": [
+        { "url": "https://picsum.photos/seed/beykoz-g1/1600/1000", "caption": "Restorasyon öncesi — Boğaz cephesi" },
+        { "url": "https://picsum.photos/seed/beykoz-g2/1600/1000", "caption": "Restitüsyon çalışmaları" },
+        { "url": "https://picsum.photos/seed/beykoz-g3/1600/1000", "caption": "Tamamlanmış cephe" },
+        { "url": "https://picsum.photos/seed/beykoz-g4/1600/1000", "caption": "İç salon — özgün ahşap" },
+        { "url": "https://picsum.photos/seed/beykoz-g5/1100/1600", "caption": "Tavan detayı" }
+      ]
+    },
+    {
+      "id": "proj_maslak",
+      "name": "Maslak Atölye Ofisi",
+      "type": "Ofis · İç Mimari · 940 m²",
+      "year": "2024",
+      "location": "İstanbul",
+      "cover": { "url": "https://picsum.photos/seed/maslak-cover-8821/1200/800", "framing": null },
+      "gallery": [
+        { "url": "https://picsum.photos/seed/maslak-g1/1600/1000", "caption": "Açık ofis düzeni" },
+        { "url": "https://picsum.photos/seed/maslak-g2/1600/1000", "caption": "Toplantı odaları" },
+        { "url": "https://picsum.photos/seed/maslak-g3/1600/1000", "caption": "Kafeterya köşesi" },
+        { "url": "https://picsum.photos/seed/maslak-g4/1600/1000", "caption": "Sirkülasyon" }
+      ]
+    },
+    {
+      "id": "proj_cunda",
+      "name": "Cunda Kayalı Otel",
+      "type": "Otel · 28 oda · 3.110 m²",
+      "year": "2023",
+      "location": "Ayvalık",
+      "cover": { "url": "https://picsum.photos/seed/cunda-cover-5503/1200/800", "framing": null },
+      "gallery": [
+        { "url": "https://picsum.photos/seed/cunda-g1/1600/1000", "caption": "Ana cephe — günbatımı" },
+        { "url": "https://picsum.photos/seed/cunda-g2/1600/1000", "caption": "Avlu" },
+        { "url": "https://picsum.photos/seed/cunda-g3/1600/1000", "caption": "Süit oda" },
+        { "url": "https://picsum.photos/seed/cunda-g4/1600/1000", "caption": "Restoran terası" },
+        { "url": "https://picsum.photos/seed/cunda-g5/1100/1600", "caption": "Detay — yerel taş + ahşap" },
+        { "url": "https://picsum.photos/seed/cunda-g6/1600/1000", "caption": "Havuz" }
+      ]
+    },
+    {
+      "id": "proj_kuzguncuk",
+      "name": "Kuzguncuk Çift Konak",
+      "type": "Restorasyon + Konut · 760 m²",
+      "year": "2022",
+      "location": "İstanbul",
+      "cover": { "url": "https://picsum.photos/seed/kuzguncuk-cover-2719/1200/800", "framing": null },
+      "gallery": [
+        { "url": "https://picsum.photos/seed/kuzguncuk-g1/1600/1000", "caption": "Sokak cephesi" },
+        { "url": "https://picsum.photos/seed/kuzguncuk-g2/1600/1000", "caption": "Konak içi salon" },
+        { "url": "https://picsum.photos/seed/kuzguncuk-g3/1600/1000", "caption": "Bahçe" },
+        { "url": "https://picsum.photos/seed/kuzguncuk-g4/1600/1000", "caption": "Detay" }
+      ]
+    },
+    {
+      "id": "proj_polonezkoy",
+      "name": "Polonezköy Çiftliği",
+      "type": "Karma · Konut + Çiftlik · 4.700 m²",
+      "year": "2024",
+      "location": "İstanbul",
+      "cover": { "url": "https://picsum.photos/seed/polonezkoy-cover-4488/1200/800", "framing": null },
+      "gallery": [
+        { "url": "https://picsum.photos/seed/polonezkoy-g1/1600/1000", "caption": "Ana ev — orman içi" },
+        { "url": "https://picsum.photos/seed/polonezkoy-g2/1600/1000", "caption": "Çiftlik yapıları" },
+        { "url": "https://picsum.photos/seed/polonezkoy-g3/1600/1000", "caption": "İç mekân" },
+        { "url": "https://picsum.photos/seed/polonezkoy-g4/1600/1000", "caption": "Açık alan düzenlemesi" }
+      ]
+    },
+    {
+      "id": "proj_galata",
+      "name": "Galata Karma Yapı",
+      "type": "İç Mimari + Restorasyon · 1.260 m²",
+      "year": "2023",
+      "location": "İstanbul",
+      "cover": { "url": "https://picsum.photos/seed/galata-cover-1037/1200/800", "framing": null },
+      "gallery": [
+        { "url": "https://picsum.photos/seed/galata-g1/1600/1000", "caption": "Restore edilmiş cephe" },
+        { "url": "https://picsum.photos/seed/galata-g2/1600/1000", "caption": "İç mekân — iki dönemin yan yana" },
+        { "url": "https://picsum.photos/seed/galata-g3/1600/1000", "caption": "Mağaza katı" }
+      ]
+    },
+    {
+      "id": "proj_selcuklu",
+      "name": "Selçuklu Köprü Restorasyonu",
+      "type": "Restorasyon · Tescilli yapı · 480 m²",
+      "year": "2022",
+      "location": "Konya",
+      "cover": { "url": "https://picsum.photos/seed/selcuklu-cover-6281/1200/800", "framing": null },
+      "gallery": [
+        { "url": "https://picsum.photos/seed/selcuklu-g1/1600/1000", "caption": "Köprü tabliyesi — restorasyon öncesi" },
+        { "url": "https://picsum.photos/seed/selcuklu-g2/1600/1000", "caption": "Taş analizi" },
+        { "url": "https://picsum.photos/seed/selcuklu-g3/1600/1000", "caption": "Tamamlanan köprü" }
+      ]
+    }
+  ],
+
+  "process": {
+    "kicker": "Süreç — 05",
+    "title": "Dört aşama,<br/>aynı sözleşmenin altında.",
+    "steps": [
+      { "num": "01", "title": "Konsept", "body": "İlk toplantı, arazi, brief. Eskizler, varyantlar ve maliyet bantları. Bu aşamada kararların yarısı verilir; geri kalan zaman çoğunlukla bunları doğrulamakla geçer.", "weeks": "2 — 6 hafta" },
+      { "num": "02", "title": "Tasarım", "body": "Ön projeden tatbikat projesine. Mimari, iç mimari, statik, mekanik, elektrik koordinasyonu. Ruhsat dosyası bu aşamada kapanır.", "weeks": "10 — 24 hafta" },
+      { "num": "03", "title": "İnşaat", "body": "Saha kurulumu, taşeron seçimi, günlük denetim. Atölyeden bir mimar haftada en az iki gün sahadadır. Değişiklikler tek bir koordinatör üzerinden ilerler.", "weeks": "8 — 22 ay" },
+      { "num": "04", "title": "Yaşam", "body": "Teslim sonrası ilk 24 ay boyunca atölye, mekânı periyodik olarak ziyaret eder. Eskime, ısı, akustik geri bildirimleri sonraki projeye girdi olur.", "weeks": "24 ay sonrası" }
+    ]
+  },
+
+  "studio": {
+    "kicker": "Atölye — 06",
+    "title": "2003'ten bu yana<br/>aynı atölyede.",
+    "lede": "Atölyemiz 2003 yılında, dört ortağın Bomonti'deki eski bir tütün deposunun üst katında kurdukları stüdyodan bugüne aynı bina, aynı ekip omurgasıyla devam ediyor. 31 kişilik kadromuzun yarısı altı yıldan uzun süredir ofiste.",
+    "stats": [
+      { "label": "Atölye",              "value": "23 yıl" },
+      { "label": "Tamamlanan proje",    "value": "184" },
+      { "label": "İnşa edilen alan",    "value": "412.000 m²" },
+      { "label": "Ekip",                "value": "31 kişi" },
+      { "label": "Ortak ülke",          "value": "7" },
+      { "label": "Tekrar eden müşteri", "value": "%67" }
+    ]
+  },
+
+  "contact": {
+    "kicker": "İletişim — 08",
+    "title": "Bir <em>çizgiyle</em> başlayalım.",
+    "intro": "İlk toplantı ofiste veya arazide olur — 45 dakika, ücretsiz, koşulsuz. Brief'iniz ilk paragraftan ibaret olabilir.",
+    "cards": [
+      { "kicker": "Atölye",          "body": "Tatlı Sokak No. 14<br/>Bomonti, Şişli<br/>34384 İstanbul" },
+      { "kicker": "Posta & Telefon", "body": "studio@strata.example<br/>+90 (212) 347 18 92<br/><span class=\"muted\">Pzt — Cum · 09.00 — 18.30</span>" },
+      { "kicker": "İzleyin",         "body": "@strata.studio — Instagram<br/>strata.studio — Behance<br/>linkedin.com/company/strata-studio" }
+    ],
+    "cta": {
+      "kicker": "Yeni proje brief'i",
+      "title": "Bize yazın.",
+      "body": "İki paragraf yeterli — ölçek, konum, hayalini kurduğunuz mekânın bir kelimesi.",
+      "email": "studio@strata.example"
+    }
+  },
+
+  "footer": {
+    "tagline":  "Mimarlık & İnşaat — İstanbul · 2003 — 2026",
+    "address":  "Tatlı Sokak No. 14, Bomonti — Şişli, İstanbul",
+    "phone":    "+90 (212) 347 18 92"
+  }
+}

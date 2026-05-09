@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="robots" content="noindex" />
+  <title>STRATA · Admin — Atölye günlüğü</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin">
+  <!-- ────────── ADMIN BAR ────────── -->
+  <header class="adminbar">
+    <div class="adminbar__inner">
+      <a class="brand" href="index.html" aria-label="Siteye dön">
+        <span class="brand__mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M3 16h16M3 11h16M3 6h16" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/>
+          </svg>
+        </span>
+        <span class="brand__word">STRATA</span>
+        <span class="brand__sub">Admin · Atölye günlüğü</span>
+      </a>
+
+      <span class="adminbar__warn" title="Veriler bu tarayıcıda localStorage'da saklanır">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 9v4M12 17h0"/><path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        </svg>
+        <span>Veriler bu tarayıcıda saklanır — yayına almak için "JSON indir"</span>
+      </span>
+
+      <span class="adminbar__cta">
+        <a class="btn btn--ghost btn--sm" href="index.html?edit=1" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          <span>Site metinlerini düzenle</span>
+        </a>
+        <a class="link link--muted" href="index.html" target="_blank" rel="noopener">
+          <span>Canlı sayfa</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l9-9M9 8h8v8"/></svg>
+        </a>
+      </span>
+    </div>
+  </header>
+
+  <!-- ────────── TAB NAV ────────── -->
+  <nav class="adtabs" role="tablist" aria-label="Yönetim sekmeleri">
+    <div class="adtabs__inner">
+      <button type="button" class="adtab is-on" role="tab" aria-selected="true" data-tab="projects" id="adtabProjects">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+        <span>Projeler</span>
+      </button>
+      <button type="button" class="adtab" role="tab" aria-selected="false" data-tab="social" id="adtabSocial">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>
+        <span>Sosyal medya</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ────────── PROJECTS TAB ────────── -->
+  <main class="admin__shell adtabpanel" id="tabProjects" role="tabpanel" aria-labelledby="adtabProjects">
+    <section class="adcard adcard--list adcard--projects">
+      <header class="adcard__head adcard__head--row">
+        <div>
+          <span class="kicker kicker--accent">Projeler</span>
+          <h2>Öne çıkan + arşiv listesi.</h2>
+        </div>
+        <button type="button" id="projectAddBtn" class="btn btn--ghost">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          <span>Yeni proje</span>
+        </button>
+      </header>
+
+      <div class="projlist__group">
+        <span class="projlist__label">Öne çıkan</span>
+        <ol class="projlist" id="featuredList" role="list"></ol>
+      </div>
+
+      <div class="projlist__group">
+        <span class="projlist__label">Arşiv (<span class="num" id="projectsCount">0</span>)</span>
+        <ol class="projlist" id="projectsListAdmin" role="list"></ol>
+      </div>
+    </section>
+
+    <section class="adcard adcard--editor" id="projectEditor" hidden>
+      <header class="adcard__head adcard__head--row">
+        <div>
+          <span class="kicker kicker--accent" id="projectEditorKicker">Yeni proje</span>
+          <h2 id="projectEditorTitle">Proje düzenle</h2>
+        </div>
+        <button type="button" id="projectCloseBtn" class="btn btn--ghost" aria-label="Kapat">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+
+      <form id="projectForm" class="form" autocomplete="off">
+        <div class="form__row">
+          <div class="field">
+            <label for="pf-name">Proje adı <span class="req">*</span></label>
+            <input id="pf-name" name="name" type="text" required placeholder="Çamlıca Sırt Evleri" />
+          </div>
+          <div class="field">
+            <label for="pf-type">Tip ve özet</label>
+            <input id="pf-type" name="type" type="text" placeholder="Konut · 3 villa · 1.840 m²" />
+          </div>
+        </div>
+
+        <div class="form__row form__row--3">
+          <div class="field">
+            <label for="pf-year">Yıl</label>
+            <input id="pf-year" name="year" type="text" placeholder="2024" />
+          </div>
+          <div class="field">
+            <label for="pf-loc">Konum</label>
+            <input id="pf-loc" name="location" type="text" placeholder="İstanbul" />
+          </div>
+          <div class="field">
+            <label for="pf-status" id="pf-status-label">Statü</label>
+            <select id="pf-status" name="status">
+              <option value="archive">Arşiv</option>
+              <option value="featured">Öne çıkan (ana sayfada büyük gösterilir)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="pf-cover">Kapak görseli URL <span class="req">*</span></label>
+          <div class="combo">
+            <input id="pf-cover" name="cover" type="url" placeholder="https://..." spellcheck="false" />
+            <label class="upload" for="pf-cover-upload">
+              <input id="pf-cover-upload" type="file" accept="image/*" hidden />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <span>Bilgisayardan</span>
+            </label>
+          </div>
+          <span class="hint">Bu görsel hem proje kartının kapağıdır hem galerinin ilk slaytı olur.</span>
+        </div>
+
+        <!-- Description (only visible when editing the featured project) -->
+        <div class="field" id="pf-description-field" hidden>
+          <label for="pf-description">Açıklama (öne çıkan proje paragrafı)</label>
+          <textarea id="pf-description" name="description" rows="4" placeholder="Bu proje hakkında 2-3 cümle..."></textarea>
+        </div>
+
+        <!-- Meta entries (only for featured) -->
+        <div class="field" id="pf-meta-field" hidden>
+          <label>Meta bilgiler (etiket → değer)</label>
+          <ol class="metalist" id="pf-meta-list" role="list"></ol>
+          <button type="button" id="pf-meta-add" class="btn btn--ghost btn--sm">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span>Satır ekle</span>
+          </button>
+        </div>
+
+        <!-- Gallery editor -->
+        <div class="field galleryfield">
+          <label>Galeri görselleri</label>
+          <span class="hint">Ziyaretçi proje kartına tıkladığında bu fotoğraflar lightbox'ta gezilir. Kapak görseli galerinin ilk slaytı olur — burada onu eklemene gerek yok.</span>
+          <ol class="gallery" id="pf-gallery" role="list"></ol>
+          <div class="gallery__add">
+            <input type="url" id="pf-gallery-url" placeholder="https://... (görsel URL'si veya boş bırakıp dosya yükle)" />
+            <input type="file" id="pf-gallery-upload" accept="image/*" multiple hidden />
+            <label for="pf-gallery-upload" class="btn btn--ghost btn--sm">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <span>Yükle</span>
+            </label>
+            <button type="button" id="pf-gallery-add" class="btn btn--primary btn--sm">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+              <span>Galeriye ekle</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form__actions">
+          <button type="button" id="projectDeleteBtn" class="btn btn--danger" hidden>Sil</button>
+          <button type="button" id="projectCancelBtn" class="btn btn--ghost">Vazgeç</button>
+          <button type="submit" class="btn btn--primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+            <span>Kaydet</span>
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- ────────── SOCIAL TAB (existing journal) ────────── -->
+  <main class="admin__shell adtabpanel" id="tabSocial" role="tabpanel" aria-labelledby="adtabSocial" hidden>
+    <!-- ────────── ADD POST ────────── -->
+    <section class="adcard adcard--form">
+      <header class="adcard__head">
+        <span class="kicker kicker--accent">Yeni gönderi</span>
+        <h1>Instagram bağlantısını yapıştır.</h1>
+        <p class="muted">URL'i yapıştır, "Otomatik doldur"a bas — görsel, caption ve tarih kendiliğinden gelir. Gerekirse düzeltip kaydet.</p>
+      </header>
+
+      <div class="editbar" id="editBar">
+        <span class="editbar__label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          <span>Düzenleme modu — <span class="num" id="editIdLabel">#</span> numaralı gönderi</span>
+        </span>
+        <button type="button" id="editCancel">Vazgeç</button>
+      </div>
+
+      <form id="postForm" class="form" autocomplete="off">
+        <div class="field field--row">
+          <label for="f-url">Instagram URL <span class="req">*</span></label>
+          <div class="combo">
+            <input
+              id="f-url"
+              name="permalink"
+              type="url"
+              required
+              placeholder="https://www.instagram.com/p/...  veya  /reel/..."
+              spellcheck="false" />
+            <button type="button" id="fetchBtn" class="btn btn--ghost">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+              <span>Otomatik doldur</span>
+            </button>
+          </div>
+          <span class="hint" id="fetchHint">Microlink.io üzerinden bir kerelik veri çekimi · 50 istek/gün ücretsiz</span>
+        </div>
+
+        <div class="field">
+          <label for="f-image">Görsel URL <span class="req">*</span></label>
+          <div class="combo">
+            <input id="f-image" name="thumbnail_url" type="url" required placeholder="https://..." spellcheck="false" />
+            <label class="upload" for="f-upload">
+              <input id="f-upload" type="file" accept="image/*" hidden />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <span>Bilgisayardan</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="cropper" id="cropper">
+          <div class="cropper__head">
+            <span class="kicker kicker--accent">Kırpma</span>
+            <span class="cropper__slot" id="cropperSlot">Hücre: Öne çıkan (2:1)</span>
+          </div>
+          <div class="cropper__stage is-empty" id="cropperStage">
+            <img id="cropperImg" alt="" draggable="false" />
+            <div class="cropper__frame" id="cropperFrame">
+              <span class="cropper__handle cropper__handle--nw" data-h="nw" aria-hidden="true"></span>
+              <span class="cropper__handle cropper__handle--ne" data-h="ne" aria-hidden="true"></span>
+              <span class="cropper__handle cropper__handle--sw" data-h="sw" aria-hidden="true"></span>
+              <span class="cropper__handle cropper__handle--se" data-h="se" aria-hidden="true"></span>
+              <span class="cropper__rule cropper__rule--v1" aria-hidden="true"></span>
+              <span class="cropper__rule cropper__rule--v2" aria-hidden="true"></span>
+              <span class="cropper__rule cropper__rule--h1" aria-hidden="true"></span>
+              <span class="cropper__rule cropper__rule--h2" aria-hidden="true"></span>
+            </div>
+            <span class="cropper__hint" id="cropperHint">Çerçeveyi sürükle · köşelerden boyutlandır</span>
+          </div>
+          <div class="cropper__controls">
+            <div class="cropper__size">
+              <span>Boyut</span>
+              <input id="cropperSize" type="range" min="20" max="100" step="1" value="100" />
+              <span class="num" id="cropperSizeVal">100%</span>
+            </div>
+            <button type="button" id="cropperReset" class="framer__reset">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+              <span>Sıfırla</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-caption">Caption / Açıklama</label>
+          <textarea id="f-caption" name="caption" rows="4" placeholder="Gönderi yazısı"></textarea>
+          <span class="hint" id="captionHint"></span>
+        </div>
+
+        <div class="form__row form__row--3">
+          <div class="field">
+            <label for="f-type">Tür</label>
+            <select id="f-type" name="media_type">
+              <option value="IMAGE">Görsel</option>
+              <option value="VIDEO">Video / Reel</option>
+              <option value="CAROUSEL_ALBUM">Carousel</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-date">Tarih</label>
+            <input id="f-date" name="timestamp" type="datetime-local" />
+          </div>
+          <div class="field">
+            <label for="f-likes">Beğeni <span class="hint hint--inline">(opsiyonel)</span></label>
+            <input id="f-likes" name="like_count" type="number" min="0" inputmode="numeric" placeholder="—" />
+          </div>
+        </div>
+
+        <div class="form__actions">
+          <button type="button" id="resetBtn" class="btn btn--ghost">Temizle</button>
+          <button type="submit" id="saveBtn" class="btn btn--primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+            <span>Kaydet</span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ────────── EXISTING POSTS ────────── -->
+    <section class="adcard adcard--list">
+      <header class="adcard__head adcard__head--row">
+        <div>
+          <span class="kicker">Mevcut gönderiler · <span class="num" id="count">0</span></span>
+          <h2>Sıralama, sitedeki sırayla aynı.</h2>
+        </div>
+        <p class="muted">Yeni eklenen gönderi en üste düşer. İlk altısı sitede görünür.</p>
+      </header>
+
+      <ol class="postlist" id="postList" role="list"></ol>
+
+      <p class="emptystate" id="emptyState" hidden>
+        <span>Henüz gönderi yok.</span>
+        <span class="muted">Sol sütundan bir Instagram bağlantısı yapıştırarak başla.</span>
+      </p>
+    </section>
+  </main>
+
+    <!-- footer scoped to the social tab — posts.json tools -->
+    <footer class="adminfoot">
+      <div class="adminfoot__inner">
+        <div class="adminfoot__group">
+          <button id="exportBtn" class="btn btn--ghost">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M5 10l7 7 7-7M5 21h14"/></svg>
+            <span>JSON indir (posts.json)</span>
+          </button>
+          <label class="btn btn--ghost" for="importInput">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9M5 14l7-7 7 7M5 3h14"/></svg>
+            <span>JSON içe aktar</span>
+            <input id="importInput" type="file" accept="application/json" hidden />
+          </label>
+        </div>
+        <button id="clearBtn" class="btn btn--danger">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+            <span>Tümünü sil</span>
+        </button>
+      </div>
+    </footer>
+
+  <!-- footer scoped to projects tab — content.json tools -->
+  <footer class="adminfoot adminfoot--projects" id="adminfootProjects">
+    <div class="adminfoot__inner">
+      <div class="adminfoot__group">
+        <button id="contentExportBtn" class="btn btn--ghost">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M5 10l7 7 7-7M5 21h14"/></svg>
+          <span>JSON indir (content.json)</span>
+        </button>
+        <label class="btn btn--ghost" for="contentImportInput">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9M5 14l7-7 7 7M5 3h14"/></svg>
+          <span>JSON içe aktar</span>
+          <input id="contentImportInput" type="file" accept="application/json" hidden />
+        </label>
+        <button id="contentResetBtn" class="btn btn--ghost">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+          <span>Varsayılana dön</span>
+        </button>
+      </div>
+      <button id="contentClearBtn" class="btn btn--danger">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+        <span>Tüm içeriği sil</span>
+      </button>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="admin.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Logs / temp
+*.log
+.serve.log
+
+# Local dev artifacts
+node_modules/
+.cache/
+
+# Vercel
+.vercel

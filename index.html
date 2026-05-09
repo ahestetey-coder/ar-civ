@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <title>STRATA — Mimarlık &amp; İnşaat · İstanbul</title>
+  <meta name="description" content="STRATA, konseptten teslime kadar tüm aşamaları aynı ekiple yöneten bir mimarlık ve inşaat atölyesidir. İstanbul." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='14' fill='%231a1816'/%3E%3Cpath d='M22 70h56M22 50h56M22 30h56' stroke='%23b87856' stroke-width='4' stroke-linecap='square'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <a href="#approach" class="skip-link">İçeriğe atla</a>
+
+  <!-- ────────── TOP BAR ────────── -->
+  <header class="topbar" id="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="#top" aria-label="STRATA ana sayfa">
+        <span class="brand__mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M3 16h16M3 11h16M3 6h16" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/>
+          </svg>
+        </span>
+        <span class="brand__word" data-edit-key="brand.word">STRATA</span>
+        <span class="brand__sub" data-edit-key="brand.subtitle">Mimarlık &amp; İnşaat</span>
+      </a>
+      <nav class="topbar__nav" aria-label="Birincil">
+        <a href="#approach">Yaklaşım</a>
+        <a href="#services">Hizmetler</a>
+        <a href="#projects">Projeler</a>
+        <a href="#process">Süreç</a>
+        <a href="#studio">Atölye</a>
+        <a href="#social">Günlük</a>
+      </nav>
+      <a class="btn btn--ghost" href="#contact">
+        <span>İletişim</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ────────── HERO (scroll-scrub) ────────── -->
+    <section class="hero" id="hero" aria-label="Çizgiden mekâna">
+      <div class="hero__sticky">
+        <video class="hero__video"
+               id="heroVideo"
+               playsinline
+               muted
+               preload="auto"
+               poster="media/hero-poster.jpg"
+               aria-hidden="true">
+          <source src="media/hero.mp4" type="video/mp4" />
+        </video>
+        <div class="hero__scrim" aria-hidden="true"></div>
+
+        <div class="hero__chrome">
+          <div class="hero__top">
+            <span class="kicker kicker--light" data-edit-key="hero.eyebrow">Atölye 002 · İstanbul</span>
+            <span class="hero__year" data-edit-key="hero.year">MMXXVI</span>
+          </div>
+
+          <div class="hero__center">
+            <h1 class="hero__display">
+              <span class="hero__line" data-fill data-edit-key="hero.titleLine1">Çizgiyle başlar,</span>
+              <span class="hero__line hero__line--ital" data-fill data-edit-key="hero.titleLine2">mekânla bitmez.</span>
+            </h1>
+            <p class="hero__lede" data-edit-key="hero.lede">
+              STRATA, ilk eskizden anahtar teslime kadar bütün aşamaları
+              aynı atölyenin içinde yürüten bir mimarlık ve inşaat
+              ofisidir. 23 yıl. 184 proje. Tek bir el.
+            </p>
+          </div>
+
+          <div class="hero__bottom">
+            <ol class="stages" id="stages" aria-label="Süreç aşamaları">
+              <li class="stage is-active" data-stage="0"><b>01</b> Konsept</li>
+              <li class="stage" data-stage="1"><b>02</b> Tasarım</li>
+              <li class="stage" data-stage="2"><b>03</b> İnşaat</li>
+              <li class="stage" data-stage="3"><b>04</b> Yaşam</li>
+            </ol>
+
+            <div class="hero__progress" aria-hidden="true">
+              <div class="hero__progress-bar" id="heroProgress"></div>
+            </div>
+
+            <div class="hero__cue">
+              <span>Aşağı kaydır</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────── APPROACH / MANIFESTO ────────── -->
+    <section class="section approach" id="approach">
+      <header class="section__head reveal">
+        <span class="kicker" data-edit-key="approach.kicker">Yaklaşım — 01</span>
+        <h2 class="display-h" data-edit-key="approach.title" data-edit-html="1">
+          Bir proje, bir <em>imza,</em><br/>tek bir ekibin emaneti.
+        </h2>
+      </header>
+
+      <div class="approach__grid">
+        <p class="approach__lede reveal" data-edit-key="approach.lede">
+          Konsept eskizinden saha denetimine kadar tüm aşamaları aynı atölye yürütür. Tasarımı çizen el, betonu döken eli tanır. Aradaki mesafe ne kadar kısaysa, sonuç o kadar bütünleşik olur — bizim inancımız budur.
+        </p>
+        <div class="approach__points reveal" data-reveal-delay="100">
+          <div>
+            <h4 data-edit-key="approach.points[0].title">Tek atölye, dört aşama.</h4>
+            <p data-edit-key="approach.points[0].body">Mimari tasarım, iç mimari, uygulama ve teslim sonrası takip — hepsi aynı ekibin sorumluluğunda.</p>
+          </div>
+          <div>
+            <h4 data-edit-key="approach.points[1].title">Müşteri ilişkisi, yıl ölçeğinde.</h4>
+            <p data-edit-key="approach.points[1].body">Mevcut müşterilerimizin ortalama proje sayısı 2,3. Bir kez çalışmaya başlayan ekipler genelde geri döner.</p>
+          </div>
+          <div>
+            <h4 data-edit-key="approach.points[2].title">Şantiyeden öğrenen tasarım.</h4>
+            <p data-edit-key="approach.points[2].body">Çizim masasında yazılan detayların yarısı, sahada düzeltilmiş detaylardır. Geri besleme döngüsünü kısa tutarız.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────── SERVICES ────────── -->
+    <section class="section services" id="services">
+      <header class="section__head section__head--row reveal">
+        <div>
+          <span class="kicker" data-edit-key="services.kicker">Hizmetler — 02</span>
+          <h2 class="display-h" data-edit-key="services.title" data-edit-html="1">Altı uzmanlık,<br/>tek bir sözleşme.</h2>
+        </div>
+        <p class="muted" data-edit-key="services.intro">Hizmetleri ayrı ayrı veya kombine alabilirsiniz. Anahtar teslim çalıştığımız projelerde altısı da iç içe çalışır.</p>
+      </header>
+
+      <ul class="services__list">
+        <li class="service reveal">
+          <span class="service__num" data-edit-key="services.list[0].num">01</span>
+          <div>
+            <h3 data-edit-key="services.list[0].title">Mimari Tasarım</h3>
+            <p data-edit-key="services.list[0].body">Konut, ofis, otel, kültür ve kamu yapıları. Konsept eskizinden tatbikat projesine kadar bütüncül süreç.</p>
+            <span class="service__meta" data-edit-key="services.list[0].meta">Konut · Ofis · Otel · Kültür · Kamu</span>
+          </div>
+        </li>
+        <li class="service service--alt reveal" data-reveal-delay="60">
+          <span class="service__num" data-edit-key="services.list[1].num">02</span>
+          <div>
+            <h3 data-edit-key="services.list[1].title">İç Mimari</h3>
+            <p data-edit-key="services.list[1].body">Mekânın iskeletinden mobilyasına kadar bütünleşik tasarım. Mimari ile aynı kararla, aynı malzeme dilinde.</p>
+            <span class="service__meta" data-edit-key="services.list[1].meta">Konsept · Detay · Mobilya · Aydınlatma</span>
+          </div>
+        </li>
+        <li class="service reveal" data-reveal-delay="120">
+          <span class="service__num" data-edit-key="services.list[2].num">03</span>
+          <div>
+            <h3 data-edit-key="services.list[2].title">İnşaat &amp; Uygulama</h3>
+            <p data-edit-key="services.list[2].body">Anahtar teslim yapım. Saha kurulumundan günlük denetime, kalite kontrolünden taşeron koordinasyonuna.</p>
+            <span class="service__meta" data-edit-key="services.list[2].meta">Anahtar teslim · Yapım · Denetim · Kalite</span>
+          </div>
+        </li>
+        <li class="service service--alt reveal">
+          <span class="service__num" data-edit-key="services.list[3].num">04</span>
+          <div>
+            <h3 data-edit-key="services.list[3].title">Kentsel &amp; Peyzaj</h3>
+            <p data-edit-key="services.list[3].body">Yapı çevresindeki açık alanların plan ve detayı. Su, sert zemin, bitki, aydınlatma — yapıyla aynı dilde tasarım.</p>
+            <span class="service__meta" data-edit-key="services.list[3].meta">Plan · Sert zemin · Peyzaj · Aydınlatma</span>
+          </div>
+        </li>
+        <li class="service reveal" data-reveal-delay="60">
+          <span class="service__num" data-edit-key="services.list[4].num">05</span>
+          <div>
+            <h3 data-edit-key="services.list[4].title">Restorasyon</h3>
+            <p data-edit-key="services.list[4].body">Tescilli yapıların rölöve, restitüsyon ve restorasyonu. Anıtlar Kurulu süreçlerinde tam dosya yönetimi.</p>
+            <span class="service__meta" data-edit-key="services.list[4].meta">Rölöve · Restitüsyon · Restorasyon · Dosya</span>
+          </div>
+        </li>
+        <li class="service service--alt reveal" data-reveal-delay="120">
+          <span class="service__num" data-edit-key="services.list[5].num">06</span>
+          <div>
+            <h3 data-edit-key="services.list[5].title">Proje Yönetimi</h3>
+            <p data-edit-key="services.list[5].body">Bütçe, takvim ve taşeron koordinasyonu. Bağımsız müşavir hizmeti veya anahtar teslim paketin parçası.</p>
+            <span class="service__meta" data-edit-key="services.list[5].meta">Bütçe · Takvim · Müşavirlik · Koordinasyon</span>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ────────── FEATURED PROJECT ────────── -->
+    <section class="section featured" id="featured" data-cms="featured">
+      <header class="section__head reveal">
+        <span class="kicker" data-cms-text="featured.kicker" data-edit-key="featured.kicker">Öne Çıkan — 03</span>
+        <h2 class="display-h" data-cms-text="featured.name" data-edit-key="featured.name">Çamlıca Sırt Evleri.</h2>
+      </header>
+
+      <div class="featured__shell reveal" id="featuredShell">
+        <div class="featured__media" id="featuredMedia">
+          <button type="button" class="featured__open" id="featuredOpen" aria-label="Galeriyi tam ekran aç">
+            <img id="featuredImg" data-cms-img="featured.cover" loading="lazy"
+                 alt="Çamlıca Sırt Evleri — bahçe cephesinden alacakaranlık görünümü"
+                 src="https://picsum.photos/seed/camlica-sirt-evleri-2641/1600/1000" />
+          </button>
+          <button type="button" class="featured__nav featured__nav--prev" id="featuredPrev" aria-label="Önceki fotoğraf">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button type="button" class="featured__nav featured__nav--next" id="featuredNext" aria-label="Sonraki fotoğraf">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+          <span class="featured__counter num" id="featuredCounter" aria-live="polite">1 / 1</span>
+          <span class="featured__hint">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l6-6m12-6V3h-6M21 3l-6 6"/></svg>
+            <span>Tam ekran için tıkla</span>
+          </span>
+        </div>
+        <aside class="featured__meta">
+          <dl data-cms="featured.meta">
+            <div><dt>Tip</dt><dd>Konut · 3 villa</dd></div>
+            <div><dt>Konum</dt><dd>Çamlıca, İstanbul</dd></div>
+            <div><dt>Alan</dt><dd><span class="num">1.840</span> m²</dd></div>
+            <div><dt>Yıl</dt><dd><span class="num">2023 — 2024</span></dd></div>
+            <div><dt>Hizmet</dt><dd>Mimari · İç Mimari · Uygulama</dd></div>
+            <div><dt>Statü</dt><dd>Tamamlandı</dd></div>
+          </dl>
+          <p data-cms-text="featured.description" data-edit-key="featured.description">
+            Yamaca sırtını yaslayan üç villa, eğimi çözmek yerine onunla anlaşan bir tipoloji üretir. Cephe; ham beton, dövme bakır panel ve dikey sedir kaplamanın bir araya gelişiyle, mevsime göre ısınan bir doku oluşturur. İç mekân tasarımı ve uygulama da aynı atölyede yürütüldü.
+          </p>
+          <a class="link" href="#projects">Tüm projelere göz at →</a>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ────────── PROJECT INDEX ────────── -->
+    <section class="section projects" id="projects">
+      <header class="section__head section__head--row reveal">
+        <div>
+          <span class="kicker" data-edit-key="archive.kicker">Arşiv — 04</span>
+          <h2 class="display-h" data-edit-key="archive.title">Seçilmiş projeler.</h2>
+        </div>
+        <p class="muted" data-edit-key="archive.intro">Son üç yılın sekiz projesi. Tam liste için ofis ile iletişime geçin — basılı katalogda 184 başlık.</p>
+      </header>
+
+      <ol class="projects__list" id="projectsList" data-cms="projects">
+        <!-- rendered by script.js from content.json — fallback static items below -->
+        <li class="proj reveal" data-fallback>
+          <span class="proj__id num">01</span>
+          <div class="proj__main">
+            <h3>Çamlıca Sırt Evleri</h3>
+            <span class="proj__type">Konut · 3 villa · 1.840 m²</span>
+          </div>
+          <span class="proj__year num">2024</span>
+          <span class="proj__loc">İstanbul</span>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ────────── PROCESS ────────── -->
+    <section class="section process" id="process">
+      <header class="section__head reveal">
+        <span class="kicker" data-edit-key="process.kicker">Süreç — 05</span>
+        <h2 class="display-h" data-edit-key="process.title" data-edit-html="1">Dört aşama,<br/>aynı sözleşmenin altında.</h2>
+      </header>
+
+      <ol class="proc">
+        <li class="proc__step reveal">
+          <span class="proc__num" data-edit-key="process.steps[0].num">01</span>
+          <div class="proc__body">
+            <h3 data-edit-key="process.steps[0].title">Konsept</h3>
+            <p data-edit-key="process.steps[0].body">İlk toplantı, arazi, brief. Eskizler, varyantlar ve maliyet bantları. Bu aşamada kararların yarısı verilir; geri kalan zaman çoğunlukla bunları doğrulamakla geçer.</p>
+            <ul class="proc__bullets">
+              <li>Arazi etüdü &amp; yasal değerlendirme</li>
+              <li>2-3 konsept varyantı</li>
+              <li>Bütçe bandı (±18%)</li>
+            </ul>
+            <span class="proc__weeks" data-edit-key="process.steps[0].weeks">2 — 6 hafta</span>
+          </div>
+        </li>
+
+        <li class="proc__step proc__step--alt reveal" data-reveal-delay="80">
+          <span class="proc__num" data-edit-key="process.steps[1].num">02</span>
+          <div class="proc__body">
+            <h3 data-edit-key="process.steps[1].title">Tasarım</h3>
+            <p data-edit-key="process.steps[1].body">Ön projeden tatbikat projesine. Mimari, iç mimari, statik, mekanik, elektrik koordinasyonu. Ruhsat dosyası bu aşamada kapanır.</p>
+            <ul class="proc__bullets">
+              <li>Ön proje · Avan proje · Tatbikat</li>
+              <li>BIM koordinasyonu (Revit + Rhino)</li>
+              <li>Ruhsat dosyası</li>
+            </ul>
+            <span class="proc__weeks" data-edit-key="process.steps[1].weeks">10 — 24 hafta</span>
+          </div>
+        </li>
+
+        <li class="proc__step reveal" data-reveal-delay="160">
+          <span class="proc__num" data-edit-key="process.steps[2].num">03</span>
+          <div class="proc__body">
+            <h3 data-edit-key="process.steps[2].title">İnşaat</h3>
+            <p data-edit-key="process.steps[2].body">Saha kurulumu, taşeron seçimi, günlük denetim. Atölyeden bir mimar haftada en az iki gün sahadadır. Değişiklikler tek bir koordinatör üzerinden ilerler.</p>
+            <ul class="proc__bullets">
+              <li>Saha kurulumu &amp; ihale</li>
+              <li>Günlük denetim · Haftalık rapor</li>
+              <li>Kalite kontrolü &amp; testler</li>
+            </ul>
+            <span class="proc__weeks" data-edit-key="process.steps[2].weeks">8 — 22 ay</span>
+          </div>
+        </li>
+
+        <li class="proc__step proc__step--alt reveal" data-reveal-delay="240">
+          <span class="proc__num" data-edit-key="process.steps[3].num">04</span>
+          <div class="proc__body">
+            <h3 data-edit-key="process.steps[3].title">Yaşam</h3>
+            <p data-edit-key="process.steps[3].body">Teslim sonrası ilk 24 ay boyunca atölye, mekânı periyodik olarak ziyaret eder. Eskime, ısı, akustik geri bildirimleri sonraki projeye girdi olur.</p>
+            <ul class="proc__bullets">
+              <li>Teslim &amp; iskan</li>
+              <li>1, 6, 12, 24. ay denetimleri</li>
+              <li>Garanti &amp; servis döngüsü</li>
+            </ul>
+            <span class="proc__weeks" data-edit-key="process.steps[3].weeks">24 ay sonrası</span>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ────────── STUDIO / NUMBERS ────────── -->
+    <section class="section studio" id="studio">
+      <header class="section__head reveal">
+        <span class="kicker" data-edit-key="studio.kicker">Atölye — 06</span>
+        <h2 class="display-h" data-edit-key="studio.title" data-edit-html="1">2003'ten bu yana<br/>aynı atölyede.</h2>
+      </header>
+
+      <div class="studio__grid">
+        <p class="studio__lede reveal" data-edit-key="studio.lede">
+          Atölyemiz 2003 yılında, dört ortağın Bomonti'deki eski bir tütün deposunun üst katında kurdukları stüdyodan bugüne aynı bina, aynı ekip omurgasıyla devam ediyor. 31 kişilik kadromuzun yarısı altı yıldan uzun süredir ofiste.
+        </p>
+
+        <dl class="studio__stats reveal" data-reveal-delay="80">
+          <div>
+            <dt data-edit-key="studio.stats[0].label">Atölye</dt>
+            <dd data-edit-key="studio.stats[0].value">23 yıl</dd>
+          </div>
+          <div>
+            <dt data-edit-key="studio.stats[1].label">Tamamlanan proje</dt>
+            <dd data-edit-key="studio.stats[1].value">184</dd>
+          </div>
+          <div>
+            <dt data-edit-key="studio.stats[2].label">İnşa edilen alan</dt>
+            <dd data-edit-key="studio.stats[2].value">412.000 m²</dd>
+          </div>
+          <div>
+            <dt data-edit-key="studio.stats[3].label">Ekip</dt>
+            <dd data-edit-key="studio.stats[3].value">31 kişi</dd>
+          </div>
+          <div>
+            <dt data-edit-key="studio.stats[4].label">Ortak ülke</dt>
+            <dd data-edit-key="studio.stats[4].value">7</dd>
+          </div>
+          <div>
+            <dt data-edit-key="studio.stats[5].label">Tekrar eden müşteri</dt>
+            <dd data-edit-key="studio.stats[5].value">%67</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ────────── SOCIAL / JOURNAL ────────── -->
+    <section class="section social" id="social">
+      <header class="section__head section__head--row reveal">
+        <div>
+          <span class="kicker kicker--accent">@strata.studio — 07</span>
+          <h2 class="display-h">Atölye günlüğü.</h2>
+        </div>
+        <p class="muted">Şantiye, atölye, eskiz masası — Instagram'da paylaştığımız son gönderiler. Kaynaktan otomatik akar.</p>
+      </header>
+
+      <div class="journal">
+        <ol class="journal__grid" id="journalGrid" aria-busy="true" aria-live="polite">
+          <li class="journal__skel" style="--n:0"></li>
+          <li class="journal__skel" style="--n:1"></li>
+          <li class="journal__skel" style="--n:2"></li>
+          <li class="journal__skel" style="--n:3"></li>
+          <li class="journal__skel" style="--n:4"></li>
+          <li class="journal__skel" style="--n:5"></li>
+        </ol>
+        <div class="journal__foot reveal">
+          <span class="journal__handle">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/>
+            </svg>
+            <span>@strata.studio</span>
+          </span>
+          <a class="link" href="https://instagram.com/strata.studio" target="_blank" rel="noopener">
+            Tüm gönderileri Instagram'da gör →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────── CONTACT ────────── -->
+    <section class="section contact" id="contact">
+      <div class="contact__shell">
+        <header class="section__head reveal">
+          <span class="kicker" data-edit-key="contact.kicker">İletişim — 08</span>
+          <h2 class="display-h" data-edit-key="contact.title" data-edit-html="1">
+            Bir <em>çizgiyle</em> başlayalım.
+          </h2>
+          <p class="muted" data-edit-key="contact.intro">İlk toplantı ofiste veya arazide olur — 45 dakika, ücretsiz, koşulsuz. Brief'iniz ilk paragraftan ibaret olabilir.</p>
+        </header>
+
+        <div class="contact__grid">
+          <div class="contact__card reveal">
+            <span class="kicker kicker--accent" data-edit-key="contact.cards[0].kicker">Atölye</span>
+            <p data-edit-key="contact.cards[0].body" data-edit-html="1">Tatlı Sokak No. 14<br/>Bomonti, Şişli<br/>34384 İstanbul</p>
+            <a class="link" href="https://maps.google.com" target="_blank" rel="noopener">Yol tarifi →</a>
+          </div>
+          <div class="contact__card reveal" data-reveal-delay="60">
+            <span class="kicker kicker--accent" data-edit-key="contact.cards[1].kicker">Posta &amp; Telefon</span>
+            <p data-edit-key="contact.cards[1].body" data-edit-html="1">
+              <a href="mailto:studio@strata.example">studio@strata.example</a><br/>
+              <a href="tel:+902123471892">+90 (212) 347 18 92</a><br/>
+              <span class="muted">Pzt — Cum · 09.00 — 18.30</span>
+            </p>
+          </div>
+          <div class="contact__card reveal" data-reveal-delay="120">
+            <span class="kicker kicker--accent" data-edit-key="contact.cards[2].kicker">İzleyin</span>
+            <p data-edit-key="contact.cards[2].body" data-edit-html="1">
+              <a href="#" target="_blank" rel="noopener">@strata.studio</a> — Instagram<br/>
+              <a href="#" target="_blank" rel="noopener">strata.studio</a> — Behance<br/>
+              <a href="#" target="_blank" rel="noopener">linkedin.com/company/strata-studio</a>
+            </p>
+          </div>
+          <a class="contact__cta reveal" href="mailto:studio@strata.example?subject=Yeni%20proje%20brief'i" data-reveal-delay="180">
+            <div>
+              <span class="kicker kicker--light" data-edit-key="contact.cta.kicker">Yeni proje brief'i</span>
+              <h3 data-edit-key="contact.cta.title">Bize yazın.</h3>
+              <p data-edit-key="contact.cta.body">İki paragraf yeterli — ölçek, konum, hayalini kurduğunuz mekânın bir kelimesi.</p>
+            </div>
+            <span class="contact__arrow" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ────────── FOOTER ────────── -->
+  <footer class="foot">
+    <div class="foot__inner">
+      <div class="foot__brand">
+        <span class="brand__word brand__word--lg" data-edit-key="brand.word">STRATA</span>
+        <span class="muted" data-edit-key="footer.tagline">Mimarlık &amp; İnşaat — İstanbul · 2003 — 2026</span>
+      </div>
+      <nav class="foot__nav" aria-label="Alt navigasyon">
+        <div>
+          <h5>Stüdyo</h5>
+          <ul>
+            <li><a href="#approach">Yaklaşım</a></li>
+            <li><a href="#studio">Atölye</a></li>
+            <li><a href="#process">Süreç</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>İş</h5>
+          <ul>
+            <li><a href="#services">Hizmetler</a></li>
+            <li><a href="#projects">Projeler</a></li>
+            <li><a href="#contact">İletişim</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Yasal</h5>
+          <ul>
+            <li><a href="#">Gizlilik</a></li>
+            <li><a href="#">KVKK</a></li>
+            <li><a href="#">Çerezler</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="foot__base">
+      <span data-edit-key="footer.address">Tatlı Sokak No. 14, Bomonti — Şişli, İstanbul</span>
+      <span class="num" data-edit-key="footer.phone">+90 (212) 347 18 92</span>
+    </div>
+  </footer>
+
+  <!-- ────────── LIGHTBOX (project gallery viewer) ────────── -->
+  <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Proje galerisi">
+    <button type="button" class="lightbox__close" id="lightboxClose" aria-label="Kapat (Esc)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+
+    <header class="lightbox__head">
+      <div class="lightbox__head-l">
+        <span class="kicker kicker--light" id="lightboxKicker">Proje</span>
+        <h3 class="lightbox__title" id="lightboxTitle"></h3>
+      </div>
+      <span class="lightbox__counter num" id="lightboxCounter">1 / 1</span>
+    </header>
+
+    <div class="lightbox__stage" id="lightboxStage">
+      <button type="button" class="lightbox__nav lightbox__nav--prev" id="lightboxPrev" aria-label="Önceki (←)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <figure class="lightbox__frame">
+        <img class="lightbox__img" id="lightboxImg" alt="" />
+      </figure>
+      <button type="button" class="lightbox__nav lightbox__nav--next" id="lightboxNext" aria-label="Sonraki (→)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+
+    <footer class="lightbox__foot">
+      <p class="lightbox__caption" id="lightboxCaption"></p>
+      <ol class="lightbox__dots" id="lightboxDots" role="tablist" aria-label="Galeride gezin"></ol>
+    </footer>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

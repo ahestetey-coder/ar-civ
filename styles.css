@@ -300,7 +300,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
   letter-spacing: -0.03em;
   margin: 0 0 22px;
   font-variation-settings: "opsz" 144, "wght" 320;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+  /* black drop-shadow at 10% opacity (90% transparent) — soft cinematic lift */
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.1);
 }
 .hero__line {
   display: block;
@@ -326,7 +329,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
   font-weight: 400;
   color: rgba(255, 255, 255, 0.82);
   margin: 0 0 0 auto;         /* push to right when right-aligned */
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  /* black drop-shadow at 10% opacity */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .hero__bottom {

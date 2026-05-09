@@ -283,20 +283,22 @@ button, input, select, textarea { font: inherit; color: inherit; }
   color: rgba(255, 255, 255, 0.72);
 }
 .hero__center {
-  align-self: end;                 /* anchored to the bottom of the 1fr row */
-  max-width: 1180px;               /* +20% to fit the larger display type */
-  margin: 0;                       /* hugs the left padding edge */
-  padding-bottom: clamp(24px, 5vh, 64px); /* breathing room above the stages strip */
-  text-align: left;
-  width: 100%;
+  align-self: end;                          /* bottom of the 1fr row */
+  justify-self: end;                        /* push to the right edge */
+  max-width: 760px;                         /* tighter block for right-side composition */
+  margin: 0;
+  padding-right: clamp(8px, 2vw, 32px);     /* breathing room from the right edge */
+  padding-bottom: clamp(20px, 4vh, 56px);   /* breathing room from the bottom */
+  text-align: right;                        /* right-aligned editorial */
+  width: auto;
 }
 .hero__display {
   font-family: 'Fraunces', 'Cormorant Garamond', 'PP Editorial New', serif;
   font-weight: 300;
-  font-size: clamp(46px, 8.16vw, 126px);   /* −20% from 58/10.2vw/158 */
+  font-size: clamp(37px, 6.53vw, 101px);    /* another −20% (cumulative −36%) */
   line-height: 0.92;
   letter-spacing: -0.03em;
-  margin: 0 0 26px;                        /* −20% proportional gap */
+  margin: 0 0 22px;
   font-variation-settings: "opsz" 144, "wght" 320;
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
 }
@@ -308,22 +310,22 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .hero__line--ital {
   font-style: italic;
   font-weight: 300;
-  font-size: 1.06em;       /* italic line slightly larger */
-  margin-left: -0.04em;    /* hangs gently to the left */
-  color: #D6B08D;          /* warm copper accent */
+  font-size: 1.06em;        /* italic line slightly larger */
+  margin-right: -0.02em;    /* tiny optical hang past the right edge */
+  color: #D6B08D;           /* warm copper accent */
 }
 .hero__line[data-fill] { color: #F6F1EA; }
 .hero__line--ital[data-fill] { color: #D6B08D; }
 
 .hero__lede {
   font-family: 'Geist', 'Inter', 'Suisse Int\'l', system-ui, -apple-system, sans-serif;
-  max-width: 52ch;
-  font-size: 14px;            /* −20% from 17px */
-  line-height: 1.7;
+  max-width: 48ch;
+  font-size: 11px;            /* another −20% (cumulative −35%) */
+  line-height: 1.65;
   letter-spacing: 0.02em;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.82);
-  margin: 0;
+  margin: 0 0 0 auto;         /* push to right when right-aligned */
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }
 
@@ -379,14 +381,20 @@ button, input, select, textarea { font: inherit; color: inherit; }
   /* Mobile uses the SAME scroll-scrub mechanic as desktop (sticky hero,
      325vh tall). Only typography and bottom-row layout differ here. */
   .hero__display {
-    font-size: clamp(38px, 10.5vw, 69px);  /* −20% mobile */
-    margin-bottom: 16px;
+    font-size: clamp(30px, 8.4vw, 55px);   /* another −20% mobile */
+    margin-bottom: 14px;
   }
-  .hero__center { padding-bottom: clamp(12px, 3vh, 28px); }
+  .hero__center {
+    /* keep right-bottom anchoring on mobile too */
+    padding-right: clamp(4px, 1.5vw, 16px);
+    padding-bottom: clamp(12px, 3vh, 28px);
+    max-width: 92%;                        /* leaves room from left edge */
+  }
   .hero__lede {
-    font-size: 13px;          /* −13% mobile (12px too small) */
-    line-height: 1.6;
+    font-size: 11px;          /* matches desktop after second 20% cut */
+    line-height: 1.55;
     max-width: 100%;
+    margin-left: auto;
   }
   .hero__bottom { grid-template-columns: 1fr; gap: 18px; }
   .hero__progress, .hero__cue { justify-self: start; }

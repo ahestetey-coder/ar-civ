@@ -151,11 +151,12 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .brand__mark {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 28px; height: 28px; border-radius: 6px;
+  width: 56px; height: 56px; border-radius: 12px;     /* 2× from 28×28 */
   background: rgba(244, 241, 236, 0.06); color: currentColor;
   border: 1px solid rgba(244, 241, 236, 0.22);
   align-self: center;
 }
+.brand__mark svg { width: 60%; height: 60%; }          /* keep default ☰ proportional */
 .brand__word {
   font-family: 'Fraunces', serif;
   font-size: 18px; font-weight: 500;
@@ -201,9 +202,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
     justify-content: space-between;
     gap: 10px;
   }
-  .brand { gap: 9px; min-width: 0; }
-  .brand__mark { width: 24px; height: 24px; border-radius: 5px; flex: 0 0 auto; }
-  .brand__mark svg { width: 18px; height: 18px; }
+  .brand { gap: 10px; min-width: 0; }
+  .brand__mark { width: 48px; height: 48px; border-radius: 10px; flex: 0 0 auto; }   /* 2× mobile */
+  .brand__mark svg { width: 60%; height: 60%; }
   .brand__word { font-size: 16px; letter-spacing: 0.05em; white-space: nowrap; }
 
   .topbar .btn {
@@ -268,7 +269,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 .hero__chrome {
   position: absolute; inset: 0;
-  padding: clamp(72px, 9vw, 96px) var(--pad) clamp(28px, 5vw, 56px);
+  /* top padding bumped — bigger logo (2×) makes the topbar taller */
+  padding: clamp(104px, 11vw, 128px) var(--pad) clamp(28px, 5vw, 56px);
   display: grid; grid-template-rows: auto 1fr auto;
   gap: 24px;
   color: #f4f1ec;

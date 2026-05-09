@@ -1,4 +1,4 @@
-/* STRATA — interactive bits
+/* AR-CİV — interactive bits
    1. Scroll-scrubbing hero video
    2. Top-bar inversion when scrolled past hero
    3. Stage labels swap with progress
@@ -678,6 +678,48 @@
       if (el.dataset.editHtml === '1') el.innerHTML = String(value);
       else el.textContent = String(value);
     });
+    hydrateBranding(content);
+  }
+
+  /* ── Branding (logo + favicon) ───────────────── */
+  function hydrateBranding(content) {
+    const brand = content && content.brand;
+    if (!brand) return;
+
+    /* Logo: replace the SVG hamburger inside every .brand__mark with an
+       <img> when a logo URL/data-URL is provided in content.brand.logoUrl */
+    if (brand.logoUrl) {
+      const safeUrl = String(brand.logoUrl);
+      document.querySelectorAll('.brand__mark').forEach(mark => {
+        if (mark.dataset.hydrated === safeUrl) return;
+        mark.innerHTML = '';
+        /* let the logo art breathe — drop the chip's frame & tint */
+        mark.style.background = 'transparent';
+        mark.style.border = '0';
+        const img = document.createElement('img');
+        img.src = safeUrl;
+        img.alt = '';
+        img.decoding = 'async';
+        img.loading = 'eager';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'contain';
+        mark.appendChild(img);
+        mark.dataset.hydrated = safeUrl;
+      });
+    }
+
+    /* Favicon: swap the <link rel="icon"> href in <head> */
+    if (brand.faviconUrl) {
+      let icon = document.getElementById('favicon');
+      if (!icon) {
+        icon = document.createElement('link');
+        icon.id = 'favicon';
+        icon.rel = 'icon';
+        document.head.appendChild(icon);
+      }
+      icon.href = String(brand.faviconUrl);
+    }
   }
 
   /* ── Edit mode ───────────────────────────────── */

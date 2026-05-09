@@ -1,4 +1,4 @@
-/* STRATA admin — Atölye günlüğü
+/* AR-CİV admin — Atölye günlüğü
    Pure client-side: localStorage persistence + Microlink fetch + import/export
    + Instagram-style crop tool (drag-frame + corner-resize + slider) + edit existing posts.
 
@@ -690,10 +690,22 @@
   /* ── DOM refs ────────────────────────────────── */
   const tabProj   = $('adtabProjects');
   const tabSoc    = $('adtabSocial');
+  const tabBrand  = $('adtabBrand');
   const panelProj = $('tabProjects');
   const panelSoc  = $('tabSocial');
+  const panelBrand= $('tabBrand');
   const footProj  = $('adminfootProjects');
   const footSoc   = document.querySelector('#tabSocial .adminfoot');
+
+  /* Brand tab DOM */
+  const brandForm     = $('brandForm');
+  const bfLogo        = $('bf-logo');
+  const bfLogoUpload  = $('bf-logo-upload');
+  const bfLogoPreview = $('bf-logo-preview');
+  const bfFavicon     = $('bf-favicon');
+  const bfFaviconUpload = $('bf-favicon-upload');
+  const bfFaviconPreview= $('bf-favicon-preview');
+  const brandClearBtn = $('brandClearBtn');
 
   const featuredList = $('featuredList');
   const projectsList = $('projectsListAdmin');
@@ -786,19 +798,84 @@
 
   /* ── Tab switching ───────────────────────────── */
   function activate(tab) {
-    const isProj = (tab === 'projects');
-    tabProj.classList.toggle('is-on', isProj);
-    tabProj.setAttribute('aria-selected', isProj);
-    tabSoc.classList.toggle('is-on', !isProj);
-    tabSoc.setAttribute('aria-selected', !isProj);
-    panelProj.hidden = !isProj;
-    panelSoc.hidden  = isProj;
-    if (footProj) footProj.style.display = isProj ? 'block' : 'none';
-    if (footSoc)  footSoc.style.display  = isProj ? 'none'  : 'block';
+    const tabs = { projects: tabProj, social: tabSoc, brand: tabBrand };
+    const panels = { projects: panelProj, social: panelSoc, brand: panelBrand };
+    Object.entries(tabs).forEach(([k, btn]) => {
+      if (!btn) return;
+      const on = (k === tab);
+      btn.classList.toggle('is-on', on);
+      btn.setAttribute('aria-selected', on);
+    });
+    Object.entries(panels).forEach(([k, p]) => { if (p) p.hidden = (k !== tab); });
+    if (footProj) footProj.style.display = (tab === 'projects') ? 'block' : 'none';
+    if (footSoc)  footSoc.style.display  = (tab === 'social')   ? 'block' : 'none';
+    if (tab === 'brand') refreshBrandForm();
     try { localStorage.setItem('strata.adminTab', tab); } catch (_) {}
   }
   tabProj.addEventListener('click', () => activate('projects'));
   tabSoc.addEventListener('click',  () => activate('social'));
+  if (tabBrand) tabBrand.addEventListener('click', () => activate('brand'));
+
+  /* ── Brand tab: logo + favicon uploads ──────── */
+  function applyBrandPreview(input, previewBox) {
+    if (!previewBox) return;
+    const v = (input.value || '').trim();
+    if (!v) { previewBox.hidden = true; return; }
+    previewBox.hidden = false;
+    const chip = previewBox.querySelector('.brandpreview__chip');
+    if (chip) chip.style.backgroundImage = `url("${v.replace(/"/g, '\\"')}")`;
+  }
+  function refreshBrandForm() {
+    const brand = (content && content.brand) || {};
+    if (bfLogo)    bfLogo.value    = brand.logoUrl || '';
+    if (bfFavicon) bfFavicon.value = brand.faviconUrl || '';
+    applyBrandPreview(bfLogo,    bfLogoPreview);
+    applyBrandPreview(bfFavicon, bfFaviconPreview);
+  }
+  function attachBrandUpload(fileInput, urlInput, previewBox, sizeLimitMB) {
+    if (!fileInput || !urlInput) return;
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (file.size > sizeLimitMB * 1024 * 1024) {
+        toast(`Görsel ${sizeLimitMB} MB üzerinde — küçült veya URL kullan`, 'warn');
+      }
+      const r = new FileReader();
+      r.onload = (ev) => {
+        urlInput.value = ev.target.result;
+        applyBrandPreview(urlInput, previewBox);
+      };
+      r.readAsDataURL(file);
+      e.target.value = '';
+    });
+    urlInput.addEventListener('input', () => applyBrandPreview(urlInput, previewBox));
+  }
+  attachBrandUpload(bfLogoUpload,    bfLogo,    bfLogoPreview,    1.5);
+  attachBrandUpload(bfFaviconUpload, bfFavicon, bfFaviconPreview, 0.5);
+
+  if (brandForm) {
+    brandForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!content) return;
+      content.brand = content.brand || {};
+      content.brand.logoUrl    = (bfLogo.value || '').trim();
+      content.brand.faviconUrl = (bfFavicon.value || '').trim();
+      persist();
+      toast('Marka kaydedildi · canlı sayfa otomatik güncellenir');
+    });
+  }
+  if (brandClearBtn) {
+    brandClearBtn.addEventListener('click', () => {
+      if (!confirm('Logo ve favicon temizlenecek (varsayılan ☰ rozeti geri gelir). Devam?')) return;
+      if (!content) return;
+      content.brand = content.brand || {};
+      delete content.brand.logoUrl;
+      delete content.brand.faviconUrl;
+      persist();
+      refreshBrandForm();
+      toast('Sıfırlandı');
+    });
+  }
 
   /* ── Render lists ────────────────────────────── */
   function renderProjectLists() {
@@ -1169,7 +1246,8 @@
 
     /* restore last active tab */
     const lastTab = (() => { try { return localStorage.getItem('strata.adminTab'); } catch (_) { return null; } })();
-    activate(lastTab === 'social' ? 'social' : 'projects');
+    const validTab = ['projects', 'social', 'brand'].includes(lastTab) ? lastTab : 'projects';
+    activate(validTab);
   })();
 
   /* live update from another tab (e.g. live site visiting admin) */

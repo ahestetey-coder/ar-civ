@@ -1,5 +1,5 @@
 /* ───────────────────────────────────────────────────────────────────
-   STRATA — Admin overlay styles
+   AR-CİV — Admin overlay styles
    Reuses CSS variables from styles.css (palette, fonts, ease).
    Keeps the public site untouched.
    ─────────────────────────────────────────────────────────────────── */
@@ -758,3 +758,36 @@ body.admin {
 
 /* ── Disable some site rules we don't want here ── */
 body.admin .reveal { opacity: 1; transform: none; }
+
+
+/* ── Brand tab preview ── */
+.brandpreview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.brandpreview__chip {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: rgba(244, 241, 236, 0.06) center/contain no-repeat;
+  border: 1px solid rgba(244, 241, 236, 0.22);
+  flex: 0 0 auto;
+}
+.brandpreview__chip--favicon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+}
+.brandpreview__label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}

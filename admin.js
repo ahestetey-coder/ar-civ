@@ -1258,3 +1258,89 @@
     }
   });
 })();
+
+
+/* ════════════════════════════════════════════════════════════════════
+   PUBLISH — push localStorage content + posts to GitHub via /api/publish.
+   Vercel sees the new commit and auto-deploys. ~30-60s to live.
+   ════════════════════════════════════════════════════════════════════ */
+(() => {
+  const btn = document.getElementById('publishBtn');
+  if (!btn) return;
+
+  const PWD_KEY     = 'strata.publishPwd';   // session-cached password
+  const POSTS_KEY   = 'strata.posts';
+  const CONTENT_KEY = 'strata.content';
+  const TOAST_EL    = document.getElementById('toast');
+
+  function toast(msg, kind) {
+    if (!TOAST_EL) { alert(msg); return; }
+    TOAST_EL.className = 'toast ' + (kind === 'error' ? 'is-error' : kind === 'warn' ? 'is-warn' : '');
+    TOAST_EL.textContent = msg;
+    requestAnimationFrame(() => TOAST_EL.classList.add('is-on'));
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => TOAST_EL.classList.remove('is-on'), 4000);
+  }
+
+  function readJSON(key) {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch (_) { return null; }
+  }
+
+  function getPassword() {
+    let pwd = '';
+    try { pwd = sessionStorage.getItem(PWD_KEY) || ''; } catch (_) {}
+    if (pwd) return pwd;
+    pwd = window.prompt('Yayın şifresi (Vercel ADMIN_PASSWORD):');
+    if (pwd) { try { sessionStorage.setItem(PWD_KEY, pwd); } catch (_) {} }
+    return pwd;
+  }
+
+  async function publish() {
+    const password = getPassword();
+    if (!password) return;
+
+    const content = readJSON(CONTENT_KEY);
+    const posts   = readJSON(POSTS_KEY);
+
+    if (!content && !posts) {
+      toast('Yayınlanacak değişiklik yok — önce admin\'de bir şey kaydet', 'warn');
+      return;
+    }
+
+    const orig = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span>Gönderiliyor...</span>';
+
+    try {
+      const res = await fetch('/api/publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password, content, posts }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (res.status === 401) {
+        try { sessionStorage.removeItem(PWD_KEY); } catch (_) {}
+        throw new Error(data.error || 'Geçersiz şifre');
+      }
+      if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+
+      const changed = (data.results || []).filter(r => r.changed);
+      if (!changed.length) {
+        toast('İçerik zaten güncel — yeni commit yok', 'warn');
+      } else {
+        toast(`✓ Yayında — ${changed.length} dosya gönderildi · Vercel ~30-60s sonra canlı`);
+      }
+    } catch (err) {
+      toast('Yayın başarısız: ' + (err.message || err), 'error');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = orig;
+    }
+  }
+
+  btn.addEventListener('click', publish);
+})();

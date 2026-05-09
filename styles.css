@@ -285,11 +285,14 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .hero__center {
   align-self: end;                          /* bottom of the 1fr row */
   justify-self: end;                        /* push to the right edge */
-  max-width: 760px;                         /* tighter block for right-side composition */
-  margin: 0;
-  padding-right: clamp(8px, 2vw, 32px);     /* breathing room from the right edge */
-  padding-bottom: clamp(20px, 4vh, 56px);   /* breathing room from the bottom */
-  text-align: right;                        /* right-aligned editorial */
+  max-width: 760px;
+  /* outer breathing room from the viewport corner — kept as margin so
+     the new background only paints behind the actual text, not the gap. */
+  margin: 0 clamp(8px, 2vw, 32px) clamp(20px, 4vh, 56px) 0;
+  /* inner padding between the background edge and the type itself */
+  padding: clamp(20px, 3vw, 36px) clamp(24px, 4vw, 48px);
+  background: rgba(0, 0, 0, 0.9);           /* 90% opaque black card */
+  text-align: right;
   width: auto;
 }
 .hero__display {
@@ -385,10 +388,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
     margin-bottom: 14px;
   }
   .hero__center {
-    /* keep right-bottom anchoring on mobile too */
-    padding-right: clamp(4px, 1.5vw, 16px);
-    padding-bottom: clamp(12px, 3vh, 28px);
-    max-width: 92%;                        /* leaves room from left edge */
+    /* tighter inner padding on mobile, keep outer corner breathing room */
+    margin: 0 clamp(4px, 1.5vw, 16px) clamp(12px, 3vh, 28px) 0;
+    padding: clamp(14px, 3vw, 22px) clamp(16px, 4vw, 26px);
+    max-width: 92%;
   }
   .hero__lede {
     font-size: 11px;          /* matches desktop after second 20% cut */

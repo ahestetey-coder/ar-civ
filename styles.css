@@ -146,15 +146,14 @@ button, input, select, textarea { font: inherit; color: inherit; }
   gap: 24px; align-items: center;
 }
 .brand {
-  display: inline-flex; align-items: baseline; gap: 12px;
+  display: inline-flex; align-items: center; gap: 14px;   /* center → mark + sub vertically aligned */
   font-weight: 500; letter-spacing: 0.02em;
 }
 .brand__mark {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 56px; height: 56px; border-radius: 12px;     /* 2× from 28×28 */
+  width: 84px; height: 84px; border-radius: 16px;     /* 3× from 28×28 */
   background: rgba(244, 241, 236, 0.06); color: currentColor;
   border: 1px solid rgba(244, 241, 236, 0.22);
-  align-self: center;
 }
 .brand__mark svg { width: 60%; height: 60%; }          /* keep default ☰ proportional */
 .brand__word {
@@ -202,8 +201,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
     justify-content: space-between;
     gap: 10px;
   }
-  .brand { gap: 10px; min-width: 0; }
-  .brand__mark { width: 48px; height: 48px; border-radius: 10px; flex: 0 0 auto; }   /* 2× mobile */
+  .brand { gap: 12px; min-width: 0; }
+  .brand__mark { width: 72px; height: 72px; border-radius: 14px; flex: 0 0 auto; }   /* 3× mobile */
   .brand__mark svg { width: 60%; height: 60%; }
   .brand__word { font-size: 16px; letter-spacing: 0.05em; white-space: nowrap; }
 
@@ -269,8 +268,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 .hero__chrome {
   position: absolute; inset: 0;
-  /* top padding bumped — bigger logo (2×) makes the topbar taller */
-  padding: clamp(104px, 11vw, 128px) var(--pad) clamp(28px, 5vw, 56px);
+  /* top padding tuned for the 3× logo (topbar now ~112px on desktop, ~92px on mobile) */
+  padding: clamp(132px, 14vw, 168px) var(--pad) clamp(28px, 5vw, 56px);
   display: grid; grid-template-rows: auto 1fr auto;
   gap: 24px;
   color: #f4f1ec;

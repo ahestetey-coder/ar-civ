@@ -286,36 +286,45 @@ button, input, select, textarea { font: inherit; color: inherit; }
   align-self: end;                          /* bottom of the 1fr row */
   justify-self: end;                        /* push to the right edge */
   max-width: 760px;
-  /* outer breathing room from the viewport corner — kept as margin so
-     the new background only paints behind the actual text, not the gap. */
+  /* outer breathing room from the viewport corner */
   margin: 0 clamp(8px, 2vw, 32px) clamp(20px, 4vh, 56px) 0;
-  /* inner padding between the background edge and the type itself */
-  padding: clamp(20px, 3vw, 36px) clamp(24px, 4vw, 48px);
-  background: rgba(0, 0, 0, 0.1);           /* 90% transparent — barely-there veil */
+  padding: 0;                               /* bg now lives on each line */
+  background: transparent;
   text-align: right;
   width: auto;
 }
 .hero__display {
   font-family: 'Fraunces', 'Cormorant Garamond', 'PP Editorial New', serif;
   font-weight: 300;
-  font-size: clamp(37px, 6.53vw, 101px);    /* another −20% (cumulative −36%) */
+  font-size: clamp(37px, 6.53vw, 101px);
   line-height: 0.92;
   letter-spacing: -0.03em;
   margin: 0 0 22px;
   font-variation-settings: "opsz" 144, "wght" 320;
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+  /* flex column → each .hero__line stacks vertically and sizes to its
+     own content width, so the background hugs the text per line. */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 .hero__line {
-  display: block;
+  display: inline-block;          /* hug content, allow per-line bg */
   color: #F6F1EA;
-  font-size: 0.94em;       /* first line slightly smaller */
+  font-size: 0.94em;              /* first line slightly smaller */
+  background: rgba(0, 0, 0, 0.1); /* 10% black veil hugging text */
+  padding: 0.06em 0.32em;
+  /* In case a single line wraps on very narrow viewports, give each
+     visual fragment its own background block. */
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 .hero__line--ital {
   font-style: italic;
   font-weight: 300;
-  font-size: 1.06em;        /* italic line slightly larger */
-  margin-right: -0.02em;    /* tiny optical hang past the right edge */
-  color: #D6B08D;           /* warm copper accent */
+  font-size: 1.06em;
+  margin-right: -0.02em;
+  color: #D6B08D;
 }
 .hero__line[data-fill] { color: #F6F1EA; }
 .hero__line--ital[data-fill] { color: #D6B08D; }
@@ -323,13 +332,23 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .hero__lede {
   font-family: 'Geist', 'Inter', 'Suisse Int\'l', system-ui, -apple-system, sans-serif;
   max-width: 48ch;
-  font-size: 11px;            /* another −20% (cumulative −35%) */
+  font-size: 11px;
   line-height: 1.65;
   letter-spacing: 0.02em;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.82);
-  margin: 0 0 0 auto;         /* push to right when right-aligned */
+  margin: 0 0 0 auto;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  /* Per-visual-line background (matches title): set the paragraph itself
+     to inline so each wrap point becomes its own bg fragment. */
+  display: inline;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 0.18em 0.42em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  /* line-height needs a touch more on inline-with-padding so the bg of
+     adjacent lines doesn't stack tightly. */
+  line-height: 2;
 }
 
 .hero__bottom {
@@ -388,14 +407,15 @@ button, input, select, textarea { font: inherit; color: inherit; }
     margin-bottom: 14px;
   }
   .hero__center {
-    /* tighter inner padding on mobile, keep outer corner breathing room */
+    /* outer corner breathing room only — bg now lives per line */
     margin: 0 clamp(4px, 1.5vw, 16px) clamp(12px, 3vh, 28px) 0;
-    padding: clamp(14px, 3vw, 22px) clamp(16px, 4vw, 26px);
+    padding: 0;
     max-width: 92%;
   }
   .hero__lede {
-    font-size: 11px;          /* matches desktop after second 20% cut */
-    line-height: 1.55;
+    font-size: 11px;
+    /* keep generous line-height so adjacent line bgs don't crash into each other */
+    line-height: 1.95;
     max-width: 100%;
     margin-left: auto;
   }

@@ -293,12 +293,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .hero__display {
   font-family: 'Fraunces', 'Cormorant Garamond', 'PP Editorial New', serif;
   font-weight: 300;
-  font-size: clamp(58px, 10.2vw, 158px);  /* ~+20% on every breakpoint */
+  font-size: clamp(46px, 8.16vw, 126px);   /* −20% from 58/10.2vw/158 */
   line-height: 0.92;
   letter-spacing: -0.03em;
-  margin: 0 0 32px;
+  margin: 0 0 26px;                        /* −20% proportional gap */
   font-variation-settings: "opsz" 144, "wght" 320;
-  /* per spec — soft cinematic depth, not heavy */
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
 }
 .hero__line {
@@ -319,7 +318,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .hero__lede {
   font-family: 'Geist', 'Inter', 'Suisse Int\'l', system-ui, -apple-system, sans-serif;
   max-width: 52ch;
-  font-size: 17px;            /* +20% from 14px */
+  font-size: 14px;            /* −20% from 17px */
   line-height: 1.7;
   letter-spacing: 0.02em;
   font-weight: 400;
@@ -380,12 +379,12 @@ button, input, select, textarea { font: inherit; color: inherit; }
   /* Mobile uses the SAME scroll-scrub mechanic as desktop (sticky hero,
      325vh tall). Only typography and bottom-row layout differ here. */
   .hero__display {
-    font-size: clamp(48px, 13.2vw, 86px);
-    margin-bottom: 20px;
+    font-size: clamp(38px, 10.5vw, 69px);  /* −20% mobile */
+    margin-bottom: 16px;
   }
   .hero__center { padding-bottom: clamp(12px, 3vh, 28px); }
   .hero__lede {
-    font-size: 15px;
+    font-size: 13px;          /* −13% mobile (12px too small) */
     line-height: 1.6;
     max-width: 100%;
   }
@@ -646,6 +645,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
   border-top: 1px solid var(--line);
   cursor: pointer;
   outline: none;
+  /* As a grid item, default min-width is `auto` (= max-content), which
+     lets the inner photo strip blow past the viewport on narrow screens.
+     Force it to honor the parent column width. */
+  min-width: 0;
+  max-width: 100%;
 }
 .projects__list .proj:last-child { border-bottom: 1px solid var(--line); }
 /* No background or frame change on hover — interactivity is signalled

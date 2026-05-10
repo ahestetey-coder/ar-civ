@@ -701,7 +701,8 @@
       const key = el.getAttribute('data-edit-key');
       const value = getAt(content, key);
       if (value == null) return;
-      if (el.dataset.editHtml === '1') el.innerHTML = String(value);
+      if (el.dataset.editAttr) el.setAttribute(el.dataset.editAttr, String(value));
+      else if (el.dataset.editHtml === '1') el.innerHTML = String(value);
       else el.textContent = String(value);
     });
     hydrateBranding(content);

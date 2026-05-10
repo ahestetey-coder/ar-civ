@@ -389,6 +389,20 @@
       </header>
 
       <form id="brandForm" class="form" autocomplete="off">
+        <!-- Page title (browser tab + tooltip on hover) -->
+        <div class="field">
+          <label for="bf-title">Sayfa başlığı (sekme adı)</label>
+          <input id="bf-title" name="metaTitle" type="text" placeholder="AR-CİV — Mimarlık & İnşaat · İstanbul" maxlength="120" />
+          <span class="hint">Tarayıcı sekmesinde ve fareyi sekmenin üzerine getirince görünen yazı. Google sonuçlarında da en üstteki başlık. 50-60 karakter ideal.</span>
+        </div>
+
+        <!-- Meta description (Google snippet) -->
+        <div class="field">
+          <label for="bf-description">Sayfa açıklaması (Google snippet)</label>
+          <textarea id="bf-description" name="metaDescription" rows="2" placeholder="AR-CİV, konseptten teslime kadar..." maxlength="180"></textarea>
+          <span class="hint">Google arama sonuçlarında başlığın altındaki açıklama. ~155 karakter sığar.</span>
+        </div>
+
         <!-- Logo -->
         <div class="field">
           <label for="bf-logo">Logo (üst sol köşedeki rozet)</label>

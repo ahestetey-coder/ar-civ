@@ -63,15 +63,18 @@ module.exports = async function handler(req, res) {
       });
       results.push({ path: u.path, commit: r.commitSha, changed: r.changed });
     }
-    /* If content has brand info, also rewrite index.html's
-       <!-- BRAND_INLINE_START --> block so first-time visitors get the
-       logo + favicon inline, before any JS runs. */
-    if (content && content.brand) {
+    /* Rewrite parts of index.html so first-time / cache-cold visitors
+       get the brand assets and meta tags inline, before any JS runs:
+         · the <!-- BRAND_INLINE_START --> block (logo CSS + favicon)
+         · the <title> element
+         · the <meta name="description"> tag */
+    if (content && (content.brand || content.meta)) {
       const r2 = await commitInlineBrand({
         token: GITHUB_TOKEN,
         repo: GITHUB_REPO,
         branch,
-        brand: content.brand,
+        brand: content.brand || {},
+        meta:  content.meta  || {},
       });
       results.push({ path: 'index.html', commit: r2.commitSha, changed: r2.changed });
     }
@@ -135,10 +138,19 @@ async function commitText({ token, repo, branch, path, text, message }) {
   return { commitSha: out.commit && out.commit.sha, changed: true };
 }
 
-/* Rewrite the marker block in index.html with an inline <style> for the
-   logo + a <link rel="icon"> for the favicon, so first-time visitors
-   never see the default ☰ before JS runs. */
-async function commitInlineBrand({ token, repo, branch, brand }) {
+/* Rewrite parts of index.html so first-time visitors get the brand and
+   meta inlined directly:
+     · <!-- BRAND_INLINE_START --> block: CSS for logo + <link rel=icon>
+     · <title>: replaced with admin's meta.title
+     · <meta name="description">: replaced with admin's meta.description */
+function escapeAttr(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+async function commitInlineBrand({ token, repo, branch, brand, meta }) {
   const url = `${GITHUB_API}/repos/${repo}/contents/index.html`;
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -149,47 +161,55 @@ async function commitInlineBrand({ token, repo, branch, brand }) {
   if (getRes.status !== 200) {
     return { commitSha: null, changed: false };
   }
-  const meta = await getRes.json();
-  let html = Buffer.from(meta.content, 'base64').toString('utf-8');
+  const fileMeta = await getRes.json();
+  let html = Buffer.from(fileMeta.content, 'base64').toString('utf-8');
+  const original = html;
 
+  /* 1. <!-- BRAND_INLINE_START --> block */
   const startMarker = '<!-- BRAND_INLINE_START';
   const endMarker = '<!-- BRAND_INLINE_END -->';
   const startIdx = html.indexOf(startMarker);
   const endIdx = html.indexOf(endMarker);
-  if (startIdx === -1 || endIdx === -1) {
-    return { commitSha: null, changed: false };
-  }
-  const startEnd = html.indexOf('-->', startIdx);
-  if (startEnd === -1 || startEnd > endIdx) {
-    return { commitSha: null, changed: false };
+  const startEnd = startIdx === -1 ? -1 : html.indexOf('-->', startIdx);
+  if (startIdx !== -1 && endIdx !== -1 && startEnd !== -1 && startEnd < endIdx) {
+    const blocks = [];
+    if (brand && brand.logoUrl) {
+      const safeUrl = String(brand.logoUrl).replace(/"/g, '%22').replace(/\)/g, '%29');
+      blocks.push(
+        '<style id="brand-inline">.brand__mark{background:url("' + safeUrl + '") center/contain no-repeat !important;background-color:transparent !important;border:0 !important}.brand__mark>svg{display:none !important}</style>'
+      );
+    }
+    if (brand && brand.faviconUrl) {
+      blocks.push('<link rel="icon" href="' + escapeAttr(brand.faviconUrl) + '">');
+    }
+    const block = blocks.length ? '\n  ' + blocks.join('\n  ') + '\n  ' : '\n  ';
+    html = html.slice(0, startEnd + 3) + block + html.slice(endIdx);
   }
 
-  const blocks = [];
-  if (brand.logoUrl) {
-    /* Defensive percent-encode for url() context. Data URLs are well-formed
-       and never legitimately contain " or ); but malformed input shouldn't
-       be able to break out of the CSS string. */
-    const safeUrl = String(brand.logoUrl).replace(/"/g, '%22').replace(/\)/g, '%29');
-    blocks.push(
-      '<style id="brand-inline">.brand__mark{background:url("' + safeUrl + '") center/contain no-repeat !important;background-color:transparent !important;border:0 !important}.brand__mark>svg{display:none !important}</style>'
+  /* 2. <title> — only swap when admin provided one */
+  if (meta && meta.title) {
+    html = html.replace(
+      /<title\b[^>]*>[\s\S]*?<\/title>/,
+      '<title data-edit-key="meta.title">' + escapeAttr(meta.title) + '</title>'
     );
   }
-  if (brand.faviconUrl) {
-    const safeFav = String(brand.faviconUrl).replace(/"/g, '&quot;');
-    blocks.push('<link rel="icon" href="' + safeFav + '">');
+
+  /* 3. <meta name="description"> — content attr only */
+  if (meta && meta.description) {
+    const re = /<meta\b[^>]*\bname=["']description["'][^>]*>/i;
+    if (re.test(html)) {
+      html = html.replace(re,
+        '<meta name="description" data-edit-key="meta.description" data-edit-attr="content" content="' + escapeAttr(meta.description) + '" />'
+      );
+    }
   }
-  const block = blocks.length ? '\n  ' + blocks.join('\n  ') + '\n  ' : '\n  ';
 
-  const before = html.slice(0, startEnd + 3);
-  const after  = html.slice(endIdx);
-  const newHtml = before + block + after;
-
-  if (newHtml === html) {
+  if (html === original) {
     return { commitSha: null, changed: false };
   }
   return commitText({
     token, repo, branch, path: 'index.html',
-    text: newHtml,
-    message: 'content: inline brand into index.html via admin',
+    text: html,
+    message: 'content: inline brand + meta into index.html via admin',
   });
 }

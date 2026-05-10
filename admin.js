@@ -701,6 +701,8 @@
 
   /* Brand tab DOM */
   const brandForm     = $('brandForm');
+  const bfTitle       = $('bf-title');
+  const bfDescription = $('bf-description');
   const bfLogo        = $('bf-logo');
   const bfLogoUpload  = $('bf-logo-upload');
   const bfLogoPreview = $('bf-logo-preview');
@@ -831,8 +833,11 @@
   }
   function refreshBrandForm() {
     const brand = (content && content.brand) || {};
-    if (bfLogo)    bfLogo.value    = brand.logoUrl || '';
-    if (bfFavicon) bfFavicon.value = brand.faviconUrl || '';
+    const meta  = (content && content.meta)  || {};
+    if (bfTitle)       bfTitle.value       = meta.title       || '';
+    if (bfDescription) bfDescription.value = meta.description || '';
+    if (bfLogo)        bfLogo.value        = brand.logoUrl    || '';
+    if (bfFavicon)     bfFavicon.value     = brand.faviconUrl || '';
     applyBrandPreview(bfLogo,    bfLogoPreview);
     applyBrandPreview(bfFavicon, bfFaviconPreview);
   }
@@ -862,9 +867,15 @@
       e.preventDefault();
       if (!content) return;
       content.brand = content.brand || {};
+      content.meta  = content.meta  || {};
+      content.meta.title       = (bfTitle && bfTitle.value || '').trim();
+      content.meta.description = (bfDescription && bfDescription.value || '').trim();
       content.brand.logoUrl    = (bfLogo.value || '').trim();
       content.brand.faviconUrl = (bfFavicon.value || '').trim();
       persist();
+      /* Title change reflects on the LIVE site only after publish.
+         Update document.title in the admin tab too for instant feedback
+         on browser-tab UI elsewhere isn't relevant — admin keeps its own. */
       toast('Marka kaydedildi · canlı sayfa otomatik güncellenir');
     });
   }

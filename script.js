@@ -240,10 +240,14 @@
 
   /* The whole social section is hidden by default; only show it when
      there's at least one valid Instagram post to display. The contact
-     section's kicker number ("İletişim — 07/08") flips with it. */
+     section's kicker number ("İletişim — 07/08") flips with it, and any
+     navigation link pointing at the social anchor is also hidden. */
   const socialSection = document.getElementById('social');
   function setSocialVisible(on) {
     if (socialSection) socialSection.hidden = !on;
+    document.querySelectorAll('[data-link="social"]').forEach(el => {
+      el.hidden = !on;
+    });
     syncContactNum();
   }
   function syncContactNum() {

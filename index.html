@@ -11,6 +11,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link id="favicon" rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='14' fill='%231a1816'/%3E%3Cpath d='M22 70h56M22 50h56M22 30h56' stroke='%23b87856' stroke-width='4' stroke-linecap='square'/%3E%3C/svg%3E" />
+  <!-- Eager brand applier — reads localStorage SYNCHRONOUSLY and paints the
+       logo via injected CSS before the body renders, so cache-warm visitors
+       never see the default ☰ flash. -->
+  <script>
+    (function () {
+      try {
+        var raw = localStorage.getItem('strata.content');
+        var c = raw ? JSON.parse(raw) : null;
+        var brand = c && c.brand;
+        if (!brand) return;
+        if (brand.logoUrl) {
+          var s = document.createElement('style');
+          s.textContent =
+            '.brand__mark{background:url(' + JSON.stringify(brand.logoUrl) +
+            ') center/contain no-repeat!important;background-color:transparent!important;border:0!important}' +
+            '.brand__mark>svg{display:none!important}';
+          document.head.appendChild(s);
+        }
+        if (brand.faviconUrl) {
+          var fav = document.getElementById('favicon');
+          if (fav) fav.href = brand.faviconUrl;
+        }
+      } catch (e) { /* malformed JSON or storage blocked — ignore, fallback shows default ☰ */ }
+    })();
+  </script>
 </head>
 <body>
   <a href="#approach" class="skip-link">İçeriğe atla</a>
@@ -33,7 +58,7 @@
         <a href="#projects">Projeler</a>
         <a href="#process">Süreç</a>
         <a href="#studio">Atölye</a>
-        <a href="#social">Günlük</a>
+        <a href="#social" data-link="social">Günlük</a>
       </nav>
       <a class="btn btn--ghost" href="#contact">
         <span>İletişim</span>

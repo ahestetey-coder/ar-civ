@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-05-10T09:32:43.244Z",
+  "updatedAt": "2026-05-10T09:46:54.691Z",
   "brand": {
     "word": "",
     "subtitle": "Mimarlık & İnşaat",
@@ -474,7 +474,8 @@
       "title": "Bize yazın.",
       "body": "İki paragraf yeterli — ölçek, konum, hayalini kurduğunuz mekânın bir kelimesi.",
       "email": "studio@strata.example"
-    }
+    },
+    "whatsapp": "+90 5543170868"
   },
   "footer": {
     "tagline": "AR.CİV Mimarlık & İnşaat — DENİZLİ · 2003 — 2026",

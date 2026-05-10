@@ -394,8 +394,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 
 @media (max-width: 760px) {
-  /* Mobile uses the SAME scroll-scrub mechanic as desktop (sticky hero,
-     325vh tall). Only typography and bottom-row layout differ here. */
+  /* Mobile flicks scroll fast — ~1 viewport per finger swipe. With 325vh
+     hero (= ~225vh of scroll) the video plays out in ≈2 swipes; each
+     swipe advances the video by ~half its duration, which the mobile
+     decoder can't keep up with → choppy scrub. Stretch the hero to
+     600vh so each swipe advances ≈25% of the video and the decoder has
+     room to breathe. */
+  .hero { height: 600vh; }
   .hero__display {
     font-size: clamp(30px, 8.4vw, 55px);   /* another −20% mobile */
     margin-bottom: 14px;

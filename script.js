@@ -74,19 +74,18 @@
     if (progressBar) progressBar.style.width = (np * 100).toFixed(2) + '%';
     setActiveStage(np);
 
-    /* Video seek is the expensive bit — coalesce to one per frame */
+    /* Video seek is the expensive bit — coalesce to one per frame.
+       Use precise `currentTime` (not fastSeek) so the playhead lands on
+       the exact frame for the scroll position. fastSeek snaps to the
+       nearest keyframe and produces a chunky/stepped look on videos
+       with sparse keyframes — which most production hero clips are. */
     if (videoRaf) return;
     videoRaf = requestAnimationFrame(() => {
       videoRaf = null;
       if (!metaReady || duration <= 0) return;
       const t = pendingProgress * duration;
-      if (Math.abs(video.currentTime - t) <= 0.02) return;
-      try {
-        /* fastSeek (when available) snaps to nearest keyframe — way
-           cheaper for mobile decoders. */
-        if (typeof video.fastSeek === 'function') video.fastSeek(t);
-        else video.currentTime = t;
-      } catch (_) { /* seek can throw mid-buffer */ }
+      if (Math.abs(video.currentTime - t) <= 0.01) return;
+      try { video.currentTime = t; } catch (_) { /* seek can throw mid-buffer */ }
     });
   }
 

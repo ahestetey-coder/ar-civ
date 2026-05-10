@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-05-10T09:13:24.311Z",
+  "updatedAt": "2026-05-10T09:26:31.606Z",
   "brand": {
     "word": "",
     "subtitle": "Mimarlık & İnşaat",
@@ -480,5 +480,9 @@
     "tagline": "AR.CİV Mimarlık & İnşaat — DENİZLİ · 2003 — 2026",
     "address": "TATLI SOKAK NO. 14, BOMONTİ — PAMUKKALE, DENİZLİ",
     "phone": "+90 (212) 347 18 92"
+  },
+  "meta": {
+    "title": "AR.CİV  ·  Mimarlık & İnşaat  ·  DENİZLİ",
+    "description": "AR.CİV Mimarlık & İnşaat, Denizli’de estetik, modern ve sürdürülebilir mimari projeler üreten profesyonel mimarlık ofisidir."
   }
 }

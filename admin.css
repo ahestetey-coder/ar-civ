@@ -854,3 +854,97 @@ body.admin .reveal { opacity: 1; transform: none; }
   grid-template-columns: 1fr;
   max-width: 880px;
 }
+
+/* ── Admin login gate ── */
+.admin.is-locked > :not(.adminlogin) { visibility: hidden !important; }
+.adminlogin {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(208, 152, 118, 0.08) 0%, transparent 60%),
+    rgba(15, 13, 11, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.adminlogin[hidden] { display: none; }
+.adminlogin__card {
+  display: grid; gap: 16px;
+  width: 100%; max-width: 380px;
+  padding: clamp(28px, 5vw, 36px);
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-deep);
+}
+.adminlogin__brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent);
+}
+.adminlogin__brand svg { color: var(--accent); }
+.adminlogin h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 60;
+  margin: 0;
+  color: var(--ink);
+}
+.adminlogin__hint {
+  margin: 0;
+  font-size: 13px; line-height: 1.55;
+  color: var(--ink-2);
+}
+.adminlogin__field { display: grid; gap: 6px; margin-top: 6px; }
+.adminlogin__field > span {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+.adminlogin__field input {
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px; letter-spacing: 0.04em;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color .25s var(--ease), background .25s var(--ease), box-shadow .25s var(--ease);
+}
+.adminlogin__field input:focus {
+  border-color: var(--accent-line);
+  background: var(--surface-2);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.adminlogin__btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px;
+  height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: 'Geist', sans-serif;
+  font-size: 14px; font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background .2s var(--ease), transform .1s var(--ease);
+  margin-top: 6px;
+}
+.adminlogin__btn:hover { background: var(--accent-deep); }
+.adminlogin__btn:active { transform: translateY(1px); }
+.adminlogin__btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.adminlogin__error {
+  margin: 0;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: rgb(232, 138, 138);
+  letter-spacing: 0.04em;
+}

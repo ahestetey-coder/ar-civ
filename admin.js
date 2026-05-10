@@ -5,6 +5,97 @@
    Crop data is stored as { cx, cy, cw, ch } — image-percent rectangle.
    Site CSS uses these vars to position the image so the crop region exactly fills the cell. */
 
+/* ════════════════════════════════════════════════════════════════════
+   LOGIN GATE — runs first. Shows a password overlay; on success,
+   removes the .is-locked class so the rest of the admin becomes
+   interactive. Auth is validated server-side via /api/admin-auth
+   against the ADMIN_PASSWORD env var. A successful login is cached
+   in sessionStorage for the lifetime of the tab.
+   ════════════════════════════════════════════════════════════════════ */
+(() => {
+  const AUTH_KEY = 'arciv.adminAuthed';
+  const overlay = document.getElementById('adminLogin');
+  const form    = document.getElementById('adminLoginForm');
+  const pwd     = document.getElementById('adminLoginPwd');
+  const btn     = document.getElementById('adminLoginBtn');
+  const errBox  = document.getElementById('adminLoginError');
+  const logoutBtn = document.getElementById('adminLogoutBtn');
+
+  function unlock() {
+    document.body.classList.remove('is-locked');
+    if (overlay) overlay.hidden = true;
+    /* Mirror the password into sessionStorage so 'Yayına al' doesn't
+       prompt a second time — the same password protects both. */
+    if (pwd && pwd.value) {
+      try { sessionStorage.setItem('strata.publishPwd', pwd.value); } catch (_) {}
+    }
+  }
+  function showError(msg) {
+    if (!errBox) return;
+    errBox.textContent = msg;
+    errBox.hidden = false;
+  }
+  function clearError() {
+    if (!errBox) return;
+    errBox.hidden = true;
+    errBox.textContent = '';
+  }
+
+  /* If already authed in this tab, skip the overlay entirely */
+  let authed = false;
+  try { authed = sessionStorage.getItem(AUTH_KEY) === '1'; } catch (_) {}
+  if (authed) {
+    unlock();
+  }
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearError();
+      const password = pwd ? pwd.value : '';
+      if (!password) { showError('Şifre girilmedi'); return; }
+
+      btn.disabled = true;
+      const origLabel = btn.innerHTML;
+      btn.innerHTML = '<span>Doğrulanıyor…</span>';
+
+      try {
+        const res = await fetch('/api/admin-auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+        });
+        if (res.status === 401) {
+          showError('Şifre yanlış');
+          if (pwd) { pwd.select(); }
+          return;
+        }
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || ('HTTP ' + res.status));
+        }
+        try { sessionStorage.setItem(AUTH_KEY, '1'); } catch (_) {}
+        unlock();
+      } catch (err) {
+        showError('Hata: ' + (err.message || err));
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = origLabel;
+      }
+    });
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      try {
+        sessionStorage.removeItem(AUTH_KEY);
+        sessionStorage.removeItem('strata.publishPwd');
+      } catch (_) {}
+      location.reload();
+    });
+  }
+})();
+
 (() => {
   const STORAGE_KEY = 'strata.posts';
 
@@ -624,37 +715,12 @@
     }
   });
 
-  /* ── Export / Import ─────────────────────────── */
-  exportBtn.addEventListener('click', () => {
-    const posts = getPosts();
-    if (!posts.length) { toast('Önce en az bir gönderi ekle', 'warn'); return; }
-    const blob = new Blob([JSON.stringify(posts, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'posts.json';
-    document.body.appendChild(a); a.click(); a.remove();
-    URL.revokeObjectURL(url);
-    toast('posts.json indirildi · media/ klasörüne yükle');
-  });
-
-  importInput.addEventListener('change', (e) => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    const r = new FileReader();
-    r.onload = (ev) => {
-      try {
-        const data = JSON.parse(ev.target.result);
-        const arr  = Array.isArray(data) ? data : (data.posts || data.data || []);
-        if (!Array.isArray(arr)) throw new Error('JSON dizi değil');
-        setPosts(arr);
-        toast(`${arr.length} gönderi içe aktarıldı`);
-      } catch (err) {
-        toast('İçe aktarma başarısız: ' + err.message, 'error');
-      }
-    };
-    r.readAsText(file);
-    importInput.value = '';
-  });
+  /* JSON export/import buttons removed — /api/publish handles persistence
+     to GitHub now, which is more reliable than a manual download/upload
+     loop. Code retained as null-safe stubs in case the buttons are
+     re-added later. */
+  if (exportBtn) exportBtn.addEventListener('click', () => {});
+  if (importInput) importInput.addEventListener('change', () => {});
 
   clearBtn.addEventListener('click', () => {
     if (!getPosts().length) { toast('Zaten boş', 'warn'); return; }
@@ -1300,36 +1366,10 @@
     toast('Silindi');
   });
 
-  /* ── Tools (export/import/reset/clear) ───────── */
-  exportBtn.addEventListener('click', () => {
-    if (!content) { toast('İçerik yok', 'warn'); return; }
-    const blob = new Blob([JSON.stringify(content, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'content.json';
-    document.body.appendChild(a); a.click(); a.remove();
-    URL.revokeObjectURL(url);
-    toast('content.json indirildi · media/ klasörüne yükle');
-  });
-
-  importIn.addEventListener('change', (e) => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    const r = new FileReader();
-    r.onload = (ev) => {
-      try {
-        const parsed = JSON.parse(ev.target.result);
-        if (!parsed || typeof parsed !== 'object') throw new Error('JSON nesne değil');
-        content = parsed;
-        persist();
-        toast('İçe aktarıldı');
-      } catch (err) {
-        toast('İçe aktarılamadı: ' + err.message, 'error');
-      }
-    };
-    r.readAsText(file);
-    importIn.value = '';
-  });
+  /* ── Tools (reset/clear) — JSON export/import buttons removed since
+     /api/publish handles persistence to GitHub now. ─────────────── */
+  if (exportBtn) exportBtn.addEventListener('click', () => {});
+  if (importIn)  importIn.addEventListener('change', () => {});
 
   resetBtn.addEventListener('click', async () => {
     if (!confirm('Tüm değişiklikler kaybolur, varsayılan içeriğe dönülür. Devam?')) return;

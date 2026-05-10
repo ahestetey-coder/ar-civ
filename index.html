@@ -436,26 +436,23 @@
         </header>
 
         <div class="contact__grid">
-          <div class="contact__card reveal">
-            <span class="kicker kicker--accent" data-edit-key="contact.cards[0].kicker">Atölye</span>
-            <p data-edit-key="contact.cards[0].body" data-edit-html="1">Tatlı Sokak No. 14<br/>Bomonti, Şişli<br/>34384 İstanbul</p>
-            <a class="link" href="https://maps.google.com" target="_blank" rel="noopener">Yol tarifi →</a>
+          <!-- Studio + Maps -->
+          <div class="contact__card contact__card--studio reveal">
+            <span class="kicker kicker--accent" data-edit-key="contact.studio.kicker">Atölye</span>
+            <p data-edit-key="contact.studio.address" data-edit-html="1">Tatlı Sokak No. 14<br/>Bomonti, Şişli<br/>34384 İstanbul</p>
+            <a class="link" id="studioMapsLink" href="https://maps.google.com" target="_blank" rel="noopener">Yol tarifi →</a>
           </div>
-          <div class="contact__card reveal" data-reveal-delay="60">
-            <span class="kicker kicker--accent" data-edit-key="contact.cards[1].kicker">Posta &amp; Telefon</span>
-            <p data-edit-key="contact.cards[1].body" data-edit-html="1">
-              <a href="mailto:studio@strata.example">studio@strata.example</a><br/>
-              <a href="tel:+902123471892">+90 (212) 347 18 92</a><br/>
-              <span class="muted">Pzt — Cum · 09.00 — 18.30</span>
-            </p>
+
+          <!-- Team — names + clickable phones, rendered by JS -->
+          <div class="contact__card contact__card--team reveal" data-reveal-delay="60">
+            <span class="kicker kicker--accent" data-edit-key="contact.team.kicker">Ekip</span>
+            <ul class="team-list" id="teamList"></ul>
           </div>
-          <div class="contact__card reveal" data-reveal-delay="120">
-            <span class="kicker kicker--accent" data-edit-key="contact.cards[2].kicker">İzleyin</span>
-            <p data-edit-key="contact.cards[2].body" data-edit-html="1">
-              <a href="#" target="_blank" rel="noopener">@strata.studio</a> — Instagram<br/>
-              <a href="#" target="_blank" rel="noopener">strata.studio</a> — Behance<br/>
-              <a href="#" target="_blank" rel="noopener">linkedin.com/company/strata-studio</a>
-            </p>
+
+          <!-- Social — only platforms with a username get rendered -->
+          <div class="contact__card contact__card--social reveal" data-reveal-delay="120" hidden>
+            <span class="kicker kicker--accent" data-edit-key="contact.social.kicker">İzleyin</span>
+            <ul class="social-list" id="socialList"></ul>
           </div>
           <a class="contact__cta reveal" href="mailto:studio@strata.example?subject=Yeni%20proje%20brief'i" data-reveal-delay="180">
             <div>

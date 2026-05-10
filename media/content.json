@@ -441,20 +441,26 @@
     "kicker": "İletişim — 07",
     "title": "Bir <em>çizgiyle</em> başlayalım.",
     "intro": "İlk toplantı ofiste veya arazide olur — 45 dakika, ücretsiz, koşulsuz. Brief'iniz ilk paragraftan ibaret olabilir.",
-    "cards": [
-      {
-        "kicker": "Atölye",
-        "body": "Tatlı Sokak No. 14<br/>Bomonti, Şişli<br/>34384 İstanbul"
-      },
-      {
-        "kicker": "Posta & Telefon",
-        "body": "studio@strata.example<br/>+90 (212) 347 18 92<br/><span class=\"muted\">Pzt — Cum · 09.00 — 18.30</span>"
-      },
-      {
-        "kicker": "İzleyin",
-        "body": "@strata.studio — Instagram<br/>strata.studio — Behance<br/>linkedin.com/company/strata-studio"
-      }
-    ],
+    "studio": {
+      "kicker": "Atölye",
+      "address": "Tatlı Sokak No. 14<br/>Bomonti, Şişli<br/>34384 İstanbul",
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Bomonti+%C5%9Ei%C5%9Fli+%C4%B0stanbul"
+    },
+    "team": {
+      "kicker": "Ekip",
+      "members": [
+        { "role": "Mimar",             "name": "Furkan ARSLAN",            "phone": "" },
+        { "role": "İnşaat Mühendisi",  "name": "İsmail Tolga UZUNOĞLU",    "phone": "" }
+      ]
+    },
+    "social": {
+      "kicker": "İzleyin",
+      "instagram": "",
+      "twitter": "",
+      "pinterest": "",
+      "youtube": "",
+      "linkedin": ""
+    },
     "cta": {
       "kicker": "Yeni proje brief'i",
       "title": "Bize yazın.",

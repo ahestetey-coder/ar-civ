@@ -65,6 +65,10 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>
         <span>Marka</span>
       </button>
+      <button type="button" class="adtab" role="tab" aria-selected="false" data-tab="contact" id="adtabContact">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>İletişim</span>
+      </button>
     </div>
   </nav>
 
@@ -423,6 +427,94 @@
 
         <div class="form__actions">
           <button type="button" id="brandClearBtn" class="btn btn--ghost">Logo ve favicon'u sıfırla</button>
+          <button type="submit" class="btn btn--primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+            <span>Kaydet</span>
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- ────────── CONTACT TAB ────────── -->
+  <main class="admin__shell adtabpanel" id="tabContact" role="tabpanel" aria-labelledby="adtabContact" hidden>
+    <section class="adcard">
+      <header class="adcard__head">
+        <span class="kicker kicker--accent">İletişim</span>
+        <h2>Atölye, ekip telefonları ve sosyal medya.</h2>
+        <p class="muted">Sadece doldurulan alanlar canlı sayfada görünür. Telefon numaraları tıklanınca arama açılır, sosyal medya kutucukları yalnızca kullanıcı adı girilen platformlar için ortaya çıkar.</p>
+      </header>
+
+      <form id="contactForm" class="form" autocomplete="off">
+        <!-- Studio + Maps -->
+        <fieldset class="contactgroup">
+          <legend>Atölye / Adres</legend>
+          <div class="form__row">
+            <div class="field">
+              <label for="cf-studio-kicker">Başlık</label>
+              <input id="cf-studio-kicker" type="text" placeholder="Atölye" />
+            </div>
+            <div class="field">
+              <label for="cf-studio-maps">Google Maps URL</label>
+              <input id="cf-studio-maps" type="url" placeholder="https://www.google.com/maps/..." spellcheck="false" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="cf-studio-address">Adres (HTML — &lt;br/&gt; satır kırmak için)</label>
+            <textarea id="cf-studio-address" rows="3" placeholder="Tatlı Sokak No. 14&lt;br/&gt;Bomonti, Şişli&lt;br/&gt;34384 İstanbul"></textarea>
+          </div>
+          <span class="hint">"Yol tarifi →" linki yukarıdaki Maps URL'sine gider. URL'yi maps.google.com'dan kopyalayıp yapıştır.</span>
+        </fieldset>
+
+        <!-- Team -->
+        <fieldset class="contactgroup">
+          <legend>Ekip — telefon numaraları tıklanır</legend>
+          <div class="field">
+            <label for="cf-team-kicker">Başlık</label>
+            <input id="cf-team-kicker" type="text" placeholder="Ekip" />
+          </div>
+          <ol class="memberlist" id="cf-team-list" role="list"></ol>
+          <button type="button" id="cf-team-add" class="btn btn--ghost btn--sm">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span>Üye ekle</span>
+          </button>
+        </fieldset>
+
+        <!-- Social -->
+        <fieldset class="contactgroup">
+          <legend>Sosyal medya — sadece kullanıcı adı, platform ikonu otomatik</legend>
+          <div class="field">
+            <label for="cf-social-kicker">Başlık</label>
+            <input id="cf-social-kicker" type="text" placeholder="İzleyin" />
+          </div>
+          <div class="form__row">
+            <div class="field">
+              <label for="cf-social-instagram">Instagram</label>
+              <input id="cf-social-instagram" type="text" placeholder="kullaniciadi" spellcheck="false" />
+            </div>
+            <div class="field">
+              <label for="cf-social-twitter">Twitter / X</label>
+              <input id="cf-social-twitter" type="text" placeholder="kullaniciadi" spellcheck="false" />
+            </div>
+          </div>
+          <div class="form__row">
+            <div class="field">
+              <label for="cf-social-pinterest">Pinterest</label>
+              <input id="cf-social-pinterest" type="text" placeholder="kullaniciadi" spellcheck="false" />
+            </div>
+            <div class="field">
+              <label for="cf-social-youtube">YouTube</label>
+              <input id="cf-social-youtube" type="text" placeholder="handle (@ olmadan)" spellcheck="false" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="cf-social-linkedin">LinkedIn</label>
+            <input id="cf-social-linkedin" type="text" placeholder="kullaniciadi (kişi /in/) — şirketse 'company/firma'" spellcheck="false" />
+          </div>
+          <span class="hint">Boş bırakılan platform sitede görünmez. Tam URL yapıştırırsanız da kabul edilir.</span>
+        </fieldset>
+
+        <div class="form__actions">
           <button type="submit" class="btn btn--primary">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
             <span>Kaydet</span>

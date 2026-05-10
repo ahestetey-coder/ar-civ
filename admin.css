@@ -791,3 +791,66 @@ body.admin .reveal { opacity: 1; transform: none; }
   text-transform: uppercase;
   color: var(--ink-3);
 }
+
+/* ── Contact tab: groups, member rows ── */
+.contactgroup {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: clamp(20px, 2vw, 28px);
+  margin: 0;
+  display: grid;
+  gap: 16px;
+}
+.contactgroup legend {
+  padding: 0 8px;
+  margin-left: -8px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent);
+}
+.memberlist { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.memberrow {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr 1fr 36px;
+  gap: 8px;
+  align-items: center;
+}
+.memberrow input {
+  font-family: 'Geist', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  outline: none;
+}
+.memberrow input:focus {
+  border-color: var(--accent-line);
+  background: var(--surface-2);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.memberrow input.member-phone { font-family: 'Geist Mono', monospace; }
+@media (max-width: 700px) {
+  .memberrow { grid-template-columns: 1fr 36px; gap: 6px; }
+  .memberrow input { grid-column: 1; }
+  .memberrow .ic { grid-row: 1; grid-column: 2; }
+}
+
+.ic {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
+}
+.ic:hover { border-color: rgba(232,138,138,0.4); color: rgb(232,138,138); background: rgba(232,138,138,0.06); }
+
+/* Brand & Contact tabs use a single full-width column */
+#tabBrand, #tabContact {
+  grid-template-columns: 1fr;
+  max-width: 880px;
+}

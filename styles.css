@@ -1002,6 +1002,62 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .contact__card a:hover { border-bottom-color: var(--accent-line); color: var(--accent); }
 .contact__card .muted { font-size: 13px; }
 
+/* ── Team list (Mimar / İnşaat Mühendisi rows with tappable phones) ── */
+.team-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+.team-member { display: grid; gap: 4px; }
+.team-member__role {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+.team-member__name {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  font-variation-settings: "opsz" 36;
+}
+.team-member__phone {
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  border-bottom: 1px solid var(--accent-line);
+  padding-bottom: 1px;
+  width: fit-content;
+}
+.team-member__phone:hover { color: var(--accent-deep); border-bottom-color: var(--accent-deep); }
+
+/* ── Social grid (icons + labels, only filled platforms render) ── */
+.social-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.social-link {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: rgba(244, 241, 236, 0.02);
+  color: var(--ink);
+  transition: border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
+}
+.social-link:hover {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--accent);
+  transform: translateX(2px);
+}
+.social-link__icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px;
+  flex: 0 0 auto;
+}
+.social-link__icon svg { width: 100%; height: 100%; }
+.social-link__label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.social-link, .social-link:hover { border-bottom-color: var(--line); }   /* override generic anchor underline */
+.social-link:hover { border-bottom-color: var(--accent-line); }
+
 .contact__cta {
   grid-column: 1 / -1;
   margin-top: 16px;

@@ -705,9 +705,102 @@
       else el.textContent = String(value);
     });
     hydrateBranding(content);
+    hydrateContact(content);
     /* Hydration may have just written 'İletişim — 08' from a stale content.json;
        re-sync the contact-kicker number based on the actual social section state. */
     if (typeof window.__syncContactNum === 'function') window.__syncContactNum();
+  }
+
+  /* ── Contact section: studio maps link, team list, social grid ── */
+  const SOCIAL_PLATFORMS = [
+    {
+      key: 'instagram', label: 'Instagram',
+      base: 'https://instagram.com/',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>',
+    },
+    {
+      key: 'twitter', label: 'Twitter / X',
+      base: 'https://x.com/',
+      icon: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2H21l-6.51 7.44L22 22h-6.766l-5.3-6.93L3.7 22H1l6.96-7.96L1 2h6.913l4.79 6.33L18.244 2zm-1.18 18h1.832L7.04 4H5.06l11.999 16z"/></svg>',
+    },
+    {
+      key: 'pinterest', label: 'Pinterest',
+      base: 'https://pinterest.com/',
+      icon: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.237 2.636 7.855 6.356 9.312-.087-.79-.166-2.005.035-2.867.18-.78 1.172-4.97 1.172-4.97s-.299-.6-.299-1.486c0-1.39.806-2.428 1.81-2.428.853 0 1.265.64 1.265 1.408 0 .858-.546 2.14-.828 3.33-.235.995.5 1.807 1.482 1.807 1.778 0 3.144-1.874 3.144-4.58 0-2.394-1.72-4.068-4.177-4.068-2.846 0-4.516 2.135-4.516 4.34 0 .859.331 1.781.745 2.281a.3.3 0 0 1 .069.288c-.075.314-.246.995-.279 1.135-.044.183-.145.222-.334.134-1.249-.581-2.03-2.407-2.03-3.874 0-3.154 2.292-6.052 6.608-6.052 3.469 0 6.165 2.473 6.165 5.776 0 3.447-2.173 6.22-5.19 6.22-1.013 0-1.965-.525-2.291-1.148l-.623 2.378c-.226.869-.835 1.958-1.244 2.621.937.29 1.931.446 2.962.446 5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>',
+    },
+    {
+      key: 'youtube', label: 'YouTube',
+      base: 'https://youtube.com/@',
+      icon: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
+    },
+    {
+      key: 'linkedin', label: 'LinkedIn',
+      base: 'https://linkedin.com/in/',
+      icon: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.063 2.063 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
+    },
+  ];
+  function safeAttr(s) { return String(s).replace(/"/g, '&quot;'); }
+  function buildSocialUrl(base, value) {
+    const v = String(value || '').trim();
+    if (!v) return '';
+    if (/^https?:\/\//i.test(v)) return v;
+    return base + v.replace(/^@/, '').replace(/^\//, '');
+  }
+  function escHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function hydrateContact(content) {
+    const c = content && content.contact;
+    if (!c) return;
+
+    /* 1. Studio Maps link */
+    const mapsUrl = c.studio && c.studio.mapsUrl;
+    const mapsLink = document.getElementById('studioMapsLink');
+    if (mapsLink && mapsUrl) mapsLink.href = mapsUrl;
+
+    /* 2. Team list */
+    const team = c.team && c.team.members;
+    const teamList = document.getElementById('teamList');
+    if (teamList && Array.isArray(team)) {
+      const valid = team.filter(m => m && m.name);
+      teamList.innerHTML = valid.map(m => {
+        const phoneTel = String(m.phone || '').replace(/[^\d+]/g, '');
+        const phoneBlock = m.phone
+          ? `<a class="team-member__phone" href="tel:${safeAttr(phoneTel)}">${escHtml(m.phone)}</a>`
+          : '';
+        return `
+          <li class="team-member">
+            <span class="team-member__role">${escHtml(m.role || '')}</span>
+            <span class="team-member__name">${escHtml(m.name)}</span>
+            ${phoneBlock}
+          </li>`;
+      }).join('');
+      const card = document.querySelector('.contact__card--team');
+      if (card) card.hidden = !valid.length;
+    }
+
+    /* 3. Social grid */
+    const social = c.social || {};
+    const socialList = document.getElementById('socialList');
+    const socialCard = document.querySelector('.contact__card--social');
+    if (socialList) {
+      const items = SOCIAL_PLATFORMS
+        .filter(p => social[p.key])
+        .map(p => {
+          const url = buildSocialUrl(p.base, social[p.key]);
+          return `
+            <li>
+              <a class="social-link" href="${safeAttr(url)}" target="_blank" rel="noopener" aria-label="${p.label}" title="${p.label}">
+                <span class="social-link__icon">${p.icon}</span>
+                <span class="social-link__label">${p.label}</span>
+              </a>
+            </li>`;
+        }).join('');
+      socialList.innerHTML = items;
+      if (socialCard) socialCard.hidden = !items.length;
+    }
   }
 
   /* ── Branding (logo + favicon) ───────────────── */

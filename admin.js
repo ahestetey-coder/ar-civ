@@ -691,9 +691,11 @@
   const tabProj   = $('adtabProjects');
   const tabSoc    = $('adtabSocial');
   const tabBrand  = $('adtabBrand');
+  const tabContact= $('adtabContact');
   const panelProj = $('tabProjects');
   const panelSoc  = $('tabSocial');
   const panelBrand= $('tabBrand');
+  const panelContact = $('tabContact');
   const footProj  = $('adminfootProjects');
   const footSoc   = document.querySelector('#tabSocial .adminfoot');
 
@@ -798,8 +800,8 @@
 
   /* ── Tab switching ───────────────────────────── */
   function activate(tab) {
-    const tabs = { projects: tabProj, social: tabSoc, brand: tabBrand };
-    const panels = { projects: panelProj, social: panelSoc, brand: panelBrand };
+    const tabs = { projects: tabProj, social: tabSoc, brand: tabBrand, contact: tabContact };
+    const panels = { projects: panelProj, social: panelSoc, brand: panelBrand, contact: panelContact };
     Object.entries(tabs).forEach(([k, btn]) => {
       if (!btn) return;
       const on = (k === tab);
@@ -809,12 +811,14 @@
     Object.entries(panels).forEach(([k, p]) => { if (p) p.hidden = (k !== tab); });
     if (footProj) footProj.style.display = (tab === 'projects') ? 'block' : 'none';
     if (footSoc)  footSoc.style.display  = (tab === 'social')   ? 'block' : 'none';
-    if (tab === 'brand') refreshBrandForm();
+    if (tab === 'brand')   refreshBrandForm();
+    if (tab === 'contact') refreshContactForm();
     try { localStorage.setItem('strata.adminTab', tab); } catch (_) {}
   }
   tabProj.addEventListener('click', () => activate('projects'));
   tabSoc.addEventListener('click',  () => activate('social'));
-  if (tabBrand) tabBrand.addEventListener('click', () => activate('brand'));
+  if (tabBrand)   tabBrand.addEventListener('click',   () => activate('brand'));
+  if (tabContact) tabContact.addEventListener('click', () => activate('contact'));
 
   /* ── Brand tab: logo + favicon uploads ──────── */
   function applyBrandPreview(input, previewBox) {
@@ -874,6 +878,107 @@
       persist();
       refreshBrandForm();
       toast('Sıfırlandı');
+    });
+  }
+
+  /* ── Contact tab: studio + team + social ──────── */
+  const contactForm     = $('contactForm');
+  const cfStudioKicker  = $('cf-studio-kicker');
+  const cfStudioMaps    = $('cf-studio-maps');
+  const cfStudioAddress = $('cf-studio-address');
+  const cfTeamKicker    = $('cf-team-kicker');
+  const cfTeamList      = $('cf-team-list');
+  const cfTeamAdd       = $('cf-team-add');
+  const cfSocialKicker  = $('cf-social-kicker');
+  const cfSocial = {
+    instagram: $('cf-social-instagram'),
+    twitter:   $('cf-social-twitter'),
+    pinterest: $('cf-social-pinterest'),
+    youtube:   $('cf-social-youtube'),
+    linkedin:  $('cf-social-linkedin'),
+  };
+
+  let editingMembers = [];
+
+  function renderMemberRows() {
+    if (!cfTeamList) return;
+    cfTeamList.innerHTML = editingMembers.map((m, i) => `
+      <li class="memberrow" data-i="${i}">
+        <input type="text" class="member-role"  placeholder="Rol (Mimar, İnşaat Mühendisi…)" value="${escapeHtml(m.role || '')}" />
+        <input type="text" class="member-name"  placeholder="Ad Soyad" value="${escapeHtml(m.name || '')}" />
+        <input type="tel"  class="member-phone" placeholder="+90 555 000 00 00" value="${escapeHtml(m.phone || '')}" />
+        <button type="button" class="ic ic--del" data-act="del-member" aria-label="Üyeyi sil">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/></svg>
+        </button>
+      </li>
+    `).join('');
+  }
+  function captureMemberRowsFromDOM() {
+    if (!cfTeamList) return;
+    editingMembers = Array.from(cfTeamList.querySelectorAll('.memberrow')).map(row => ({
+      role:  row.querySelector('.member-role').value.trim(),
+      name:  row.querySelector('.member-name').value.trim(),
+      phone: row.querySelector('.member-phone').value.trim(),
+    }));
+  }
+  if (cfTeamList) {
+    cfTeamList.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-act="del-member"]');
+      if (!btn) return;
+      captureMemberRowsFromDOM();
+      const i = parseInt(btn.closest('.memberrow').dataset.i, 10);
+      editingMembers.splice(i, 1);
+      renderMemberRows();
+    });
+  }
+  if (cfTeamAdd) {
+    cfTeamAdd.addEventListener('click', () => {
+      captureMemberRowsFromDOM();
+      editingMembers.push({ role: '', name: '', phone: '' });
+      renderMemberRows();
+    });
+  }
+
+  function refreshContactForm() {
+    const c = (content && content.contact) || {};
+    const s = c.studio || {}, t = c.team || {}, soc = c.social || {};
+    if (cfStudioKicker)  cfStudioKicker.value  = s.kicker  || '';
+    if (cfStudioMaps)    cfStudioMaps.value    = s.mapsUrl || '';
+    if (cfStudioAddress) cfStudioAddress.value = s.address || '';
+    if (cfTeamKicker)    cfTeamKicker.value    = t.kicker  || '';
+    editingMembers = Array.isArray(t.members) ? t.members.map(m => ({
+      role: m.role || '', name: m.name || '', phone: m.phone || ''
+    })) : [];
+    renderMemberRows();
+    if (cfSocialKicker) cfSocialKicker.value = soc.kicker || '';
+    Object.keys(cfSocial).forEach(k => {
+      if (cfSocial[k]) cfSocial[k].value = soc[k] || '';
+    });
+  }
+
+  if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!content) return;
+      captureMemberRowsFromDOM();
+      content.contact = content.contact || {};
+      content.contact.studio = {
+        kicker:  cfStudioKicker.value.trim() || 'Atölye',
+        address: cfStudioAddress.value.trim(),
+        mapsUrl: cfStudioMaps.value.trim(),
+      };
+      content.contact.team = {
+        kicker:  cfTeamKicker.value.trim() || 'Ekip',
+        members: editingMembers.filter(m => m.name || m.phone || m.role),
+      };
+      const social = { kicker: cfSocialKicker.value.trim() || 'İzleyin' };
+      Object.keys(cfSocial).forEach(k => {
+        const v = cfSocial[k] ? cfSocial[k].value.trim() : '';
+        social[k] = v;
+      });
+      content.contact.social = social;
+      persist();
+      toast('İletişim kaydedildi · canlı sayfa otomatik güncellenir');
     });
   }
 
@@ -1246,7 +1351,7 @@
 
     /* restore last active tab */
     const lastTab = (() => { try { return localStorage.getItem('strata.adminTab'); } catch (_) { return null; } })();
-    const validTab = ['projects', 'social', 'brand'].includes(lastTab) ? lastTab : 'projects';
+    const validTab = ['projects', 'social', 'brand', 'contact'].includes(lastTab) ? lastTab : 'projects';
     activate(validTab);
   })();
 

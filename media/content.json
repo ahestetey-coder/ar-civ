@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-05-10T09:26:31.606Z",
+  "updatedAt": "2026-05-10T09:31:26.767Z",
   "brand": {
     "word": "",
     "subtitle": "Mimarlık & İnşaat",
@@ -442,9 +442,9 @@
     "title": "Bir <em>çizgiyle</em> başlayalım.",
     "intro": "İlk toplantı ofiste veya arazide olur — 45 dakika, ücretsiz, koşulsuz. Brief'iniz ilk paragraftan ibaret olabilir.",
     "studio": {
-      "kicker": "Atölye",
-      "address": "Tatlı Sokak No. 14<br/>Bomonti, Şişli<br/>34384 İstanbul",
-      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Bomonti+%C5%9Ei%C5%9Fli+%C4%B0stanbul"
+      "kicker": "Ofis",
+      "address": "Sırakapılar mh. 1521 sk. Çağdaş Apt. No: 23/1 Merkezefendi / DENİZLİ",
+      "mapsUrl": "https://maps.app.goo.gl/rQjWcFDtDSEibQF49"
     },
     "team": {
       "kicker": "Ekip",

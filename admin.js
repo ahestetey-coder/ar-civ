@@ -6,94 +6,21 @@
    Site CSS uses these vars to position the image so the crop region exactly fills the cell. */
 
 /* ════════════════════════════════════════════════════════════════════
-   LOGIN GATE — runs first. Shows a password overlay; on success,
-   removes the .is-locked class so the rest of the admin becomes
-   interactive. Auth is validated server-side via /api/admin-auth
-   against the ADMIN_PASSWORD env var. A successful login is cached
-   in sessionStorage for the lifetime of the tab.
+   LOGOUT — auth itself is enforced server-side by /middleware.js, so
+   anyone hitting admin.html already passed the cookie check. The only
+   client-side concern is wiring the "Çıkış" button to clear the cookie
+   via /api/admin-logout and bounce back to the login page.
    ════════════════════════════════════════════════════════════════════ */
 (() => {
-  const AUTH_KEY = 'arciv.adminAuthed';
-  const overlay = document.getElementById('adminLogin');
-  const form    = document.getElementById('adminLoginForm');
-  const pwd     = document.getElementById('adminLoginPwd');
-  const btn     = document.getElementById('adminLoginBtn');
-  const errBox  = document.getElementById('adminLoginError');
   const logoutBtn = document.getElementById('adminLogoutBtn');
-
-  function unlock() {
-    document.body.classList.remove('is-locked');
-    if (overlay) overlay.hidden = true;
-    /* Mirror the password into sessionStorage so 'Yayına al' doesn't
-       prompt a second time — the same password protects both. */
-    if (pwd && pwd.value) {
-      try { sessionStorage.setItem('strata.publishPwd', pwd.value); } catch (_) {}
-    }
-  }
-  function showError(msg) {
-    if (!errBox) return;
-    errBox.textContent = msg;
-    errBox.hidden = false;
-  }
-  function clearError() {
-    if (!errBox) return;
-    errBox.hidden = true;
-    errBox.textContent = '';
-  }
-
-  /* If already authed in this tab, skip the overlay entirely */
-  let authed = false;
-  try { authed = sessionStorage.getItem(AUTH_KEY) === '1'; } catch (_) {}
-  if (authed) {
-    unlock();
-  }
-
-  if (form) {
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      clearError();
-      const password = pwd ? pwd.value : '';
-      if (!password) { showError('Şifre girilmedi'); return; }
-
-      btn.disabled = true;
-      const origLabel = btn.innerHTML;
-      btn.innerHTML = '<span>Doğrulanıyor…</span>';
-
-      try {
-        const res = await fetch('/api/admin-auth', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password }),
-        });
-        if (res.status === 401) {
-          showError('Şifre yanlış');
-          if (pwd) { pwd.select(); }
-          return;
-        }
-        if (!res.ok) {
-          const data = await res.json().catch(() => ({}));
-          throw new Error(data.error || ('HTTP ' + res.status));
-        }
-        try { sessionStorage.setItem(AUTH_KEY, '1'); } catch (_) {}
-        unlock();
-      } catch (err) {
-        showError('Hata: ' + (err.message || err));
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = origLabel;
-      }
-    });
-  }
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      try {
-        sessionStorage.removeItem(AUTH_KEY);
-        sessionStorage.removeItem('strata.publishPwd');
-      } catch (_) {}
-      location.reload();
-    });
-  }
+  if (!logoutBtn) return;
+  logoutBtn.addEventListener('click', async () => {
+    try { sessionStorage.removeItem('strata.publishPwd'); } catch (_) {}
+    try {
+      await fetch('/api/admin-logout', { method: 'POST', credentials: 'same-origin' });
+    } catch (_) { /* network failure: still bounce to login */ }
+    location.replace('/login.html');
+  });
 })();
 
 (() => {

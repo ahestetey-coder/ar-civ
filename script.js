@@ -238,20 +238,24 @@
     `;
   }
 
+  /* The whole social section is hidden by default; only show it when
+     there's at least one valid Instagram post to display. */
+  const socialSection = document.getElementById('social');
+  function setSocialVisible(on) {
+    if (socialSection) socialSection.hidden = !on;
+  }
+
   function renderError() {
-    grid.classList.add('is-error');
-    grid.innerHTML = `
-      <li class="journal__empty">
-        <p>Şu an gönderiler yüklenemiyor.</p>
-        <a class="link" href="${PROFILE_URL}" target="_blank" rel="noopener">Doğrudan Instagram'a git →</a>
-      </li>
-    `;
+    /* No posts (or fetch failed) → keep the whole section hidden. */
+    setSocialVisible(false);
   }
 
   function paint(rawList) {
     const posts = rawList.slice(0, MAX_POSTS).map(normalize).filter(p => p.thumbnailUrl);
-    if (!posts.length) return renderError();
+    if (!posts.length) { setSocialVisible(false); return; }
+    setSocialVisible(true);
     grid.removeAttribute('aria-busy');
+    grid.classList.remove('is-error');
     grid.innerHTML = posts.map(renderPost).join('');
 
     if ('IntersectionObserver' in window && !reduceMotion) {
@@ -295,11 +299,12 @@
 
   load();
 
-  /* live-update if another tab (e.g. admin) writes a post */
+  /* live-update if another tab (e.g. admin) writes / clears posts */
   window.addEventListener('storage', (e) => {
     if (e.key === 'strata.posts') {
       const local = readLocalPosts();
       if (local) paint(local);
+      else setSocialVisible(false);   /* admin cleared everything */
     }
   });
 })();

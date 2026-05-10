@@ -239,11 +239,28 @@
   }
 
   /* The whole social section is hidden by default; only show it when
-     there's at least one valid Instagram post to display. */
+     there's at least one valid Instagram post to display. The contact
+     section's kicker number ("İletişim — 07/08") flips with it. */
   const socialSection = document.getElementById('social');
   function setSocialVisible(on) {
     if (socialSection) socialSection.hidden = !on;
+    syncContactNum();
   }
+  function syncContactNum() {
+    const isHidden = socialSection ? socialSection.hidden : true;
+    const targetNum = isHidden ? '07' : '08';
+    document.querySelectorAll('[data-edit-key="contact.kicker"]').forEach(el => {
+      const txt = el.textContent || '';
+      /* Replace the trailing 1-2 digit number, preserving any custom prefix
+         the user may have typed via the inline editor. */
+      const next = txt.replace(/\b\d{1,2}\s*$/, targetNum);
+      if (next !== txt) el.textContent = next;
+      else if (!/\d/.test(txt)) el.textContent = txt.replace(/\s*$/, '') + ' — ' + targetNum;
+    });
+  }
+  /* Expose so the hydration IIFE can re-sync after writing content from
+     localStorage / content.json (which can race with social load). */
+  window.__syncContactNum = syncContactNum;
 
   function renderError() {
     /* No posts (or fetch failed) → keep the whole section hidden. */
@@ -684,6 +701,9 @@
       else el.textContent = String(value);
     });
     hydrateBranding(content);
+    /* Hydration may have just written 'İletişim — 08' from a stale content.json;
+       re-sync the contact-kicker number based on the actual social section state. */
+    if (typeof window.__syncContactNum === 'function') window.__syncContactNum();
   }
 
   /* ── Branding (logo + favicon) ───────────────── */

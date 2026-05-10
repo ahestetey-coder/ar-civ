@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-05-09T22:06:24.855Z",
+  "updatedAt": "2026-05-10T09:08:37.513Z",
   "brand": {
     "word": "",
     "subtitle": "Mimarlık & İnşaat",
@@ -449,13 +449,21 @@
     "team": {
       "kicker": "Ekip",
       "members": [
-        { "role": "Mimar",             "name": "Furkan ARSLAN",            "phone": "" },
-        { "role": "İnşaat Mühendisi",  "name": "İsmail Tolga UZUNOĞLU",    "phone": "" }
+        {
+          "role": "Mimar",
+          "name": "Furkan ARSLAN",
+          "phone": "0 534 827 87 16"
+        },
+        {
+          "role": "İnşaat Mühendisi",
+          "name": "İsmail Tolga UZUNOĞLU",
+          "phone": ""
+        }
       ]
     },
     "social": {
-      "kicker": "İzleyin",
-      "instagram": "",
+      "kicker": "SOSYAL MEDYA",
+      "instagram": "ar.civmimarlik",
       "twitter": "",
       "pinterest": "",
       "youtube": "",

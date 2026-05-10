@@ -204,6 +204,22 @@ async function commitInlineBrand({ token, repo, branch, brand, meta }) {
     }
   }
 
+  /* 4. brand.word and brand.subtitle — inline so the topbar/footer
+     don't briefly show the default 'AR-CİV' and flicker when the user
+     has set a different (or empty) value. */
+  if (brand && typeof brand.word === 'string') {
+    html = html.replace(
+      /(<span\b[^>]*\bdata-edit-key="brand\.word"[^>]*>)[\s\S]*?(<\/span>)/g,
+      '$1' + escapeAttr(brand.word) + '$2'
+    );
+  }
+  if (brand && typeof brand.subtitle === 'string') {
+    html = html.replace(
+      /(<span\b[^>]*\bdata-edit-key="brand\.subtitle"[^>]*>)[\s\S]*?(<\/span>)/g,
+      '$1' + escapeAttr(brand.subtitle) + '$2'
+    );
+  }
+
   if (html === original) {
     return { commitSha: null, changed: false };
   }

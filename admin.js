@@ -894,6 +894,7 @@
 
   /* ── Contact tab: studio + team + social ──────── */
   const contactForm     = $('contactForm');
+  const cfWhatsApp      = $('cf-whatsapp');
   const cfStudioKicker  = $('cf-studio-kicker');
   const cfStudioMaps    = $('cf-studio-maps');
   const cfStudioAddress = $('cf-studio-address');
@@ -953,6 +954,7 @@
   function refreshContactForm() {
     const c = (content && content.contact) || {};
     const s = c.studio || {}, t = c.team || {}, soc = c.social || {};
+    if (cfWhatsApp)      cfWhatsApp.value      = c.whatsapp || '';
     if (cfStudioKicker)  cfStudioKicker.value  = s.kicker  || '';
     if (cfStudioMaps)    cfStudioMaps.value    = s.mapsUrl || '';
     if (cfStudioAddress) cfStudioAddress.value = s.address || '';
@@ -973,6 +975,7 @@
       if (!content) return;
       captureMemberRowsFromDOM();
       content.contact = content.contact || {};
+      content.contact.whatsapp = (cfWhatsApp && cfWhatsApp.value || '').trim();
       content.contact.studio = {
         kicker:  cfStudioKicker.value.trim() || 'Atölye',
         address: cfStudioAddress.value.trim(),

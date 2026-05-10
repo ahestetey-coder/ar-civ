@@ -782,7 +782,40 @@
       if (card) card.hidden = !valid.length;
     }
 
-    /* 3. Social grid */
+    /* 3. WhatsApp contact form — opens wa.me with formatted message */
+    const waNumber = (c.whatsapp || '').replace(/[^\d]/g, '');
+    const form = document.getElementById('contactForm');
+    if (form && !form.dataset.wired) {
+      form.dataset.wired = '1';
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const fd = new FormData(form);
+        const name    = String(fd.get('name')    || '').trim();
+        const phone   = String(fd.get('phone')   || '').trim();
+        const message = String(fd.get('message') || '').trim();
+        if (!name || !phone || !message) {
+          form.classList.add('is-invalid');
+          setTimeout(() => form.classList.remove('is-invalid'), 800);
+          return;
+        }
+        const number = (form.dataset.wa || waNumber || '').replace(/[^\d]/g, '');
+        if (!number) {
+          alert('WhatsApp numarası tanımlı değil — admin → İletişim → WhatsApp alanından girin.');
+          return;
+        }
+        const body =
+          'Ad Soyad: ' + name + '\n' +
+          'Telefon: ' + phone + '\n\n' +
+          message;
+        const url = 'https://wa.me/' + number + '?text=' + encodeURIComponent(body);
+        window.open(url, '_blank', 'noopener');
+      });
+    }
+    /* Stash latest WhatsApp number on the form so the same handler always
+       sees the freshest value when admin updates it via storage event. */
+    if (form) form.dataset.wa = waNumber;
+
+    /* 4. Social grid */
     const social = c.social || {};
     const socialList = document.getElementById('socialList');
     const socialCard = document.querySelector('.contact__card--social');

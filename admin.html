@@ -460,6 +460,16 @@
       </header>
 
       <form id="contactForm" class="form" autocomplete="off">
+        <!-- WhatsApp number — receives "Bize yazın" form messages -->
+        <fieldset class="contactgroup">
+          <legend>WhatsApp — "Bize yazın" formundan gelen mesajlar</legend>
+          <div class="field">
+            <label for="cf-whatsapp">WhatsApp numarası</label>
+            <input id="cf-whatsapp" type="tel" placeholder="+90 5XX XXX XX XX" spellcheck="false" />
+            <span class="hint">Ülke kodlu yaz: +905XXXXXXXXX. Boşluklar ve diğer karakterler temizlenir. Sitedeki form bu numaraya WhatsApp üzerinden mesaj gönderir.</span>
+          </div>
+        </fieldset>
+
         <!-- Studio + Maps -->
         <fieldset class="contactgroup">
           <legend>Atölye / Adres</legend>

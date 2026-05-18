@@ -427,6 +427,13 @@
           <span class="hint">Google arama sonuçlarında başlığın altındaki açıklama. ~155 karakter sığar.</span>
         </div>
 
+        <!-- Hero video (scroll-scrub clip behind the title) -->
+        <div class="field">
+          <label for="bf-hero-video">Hero videosu URL'si (kaydırmalı animasyon)</label>
+          <input id="bf-hero-video" name="heroVideo" type="url" placeholder="https://... .mp4 (Cloudflare R2, Bunny CDN, GitHub Releases, …)" spellcheck="false" />
+          <span class="hint">Doğrudan .mp4 linki yapıştır. Boş bırakırsan varsayılan (media/hero.mp4) geri gelir. Tipik hero videolar 20-50 MB olduğu için JSON içine gömmek yerine harici barındırma kullanırız — Cloudflare R2 (10 GB ücretsiz), GitHub Releases ve Bunny CDN iyi seçenekler.</span>
+        </div>
+
         <!-- Logo -->
         <div class="field">
           <label for="bf-logo">Logo (üst sol köşedeki rozet)</label>

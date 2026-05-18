@@ -706,9 +706,34 @@
     });
     hydrateBranding(content);
     hydrateContact(content);
+    hydrateHeroVideo(content);
     /* Hydration may have just written 'İletişim — 08' from a stale content.json;
        re-sync the contact-kicker number based on the actual social section state. */
     if (typeof window.__syncContactNum === 'function') window.__syncContactNum();
+  }
+
+  /* ── Hero video swap ─────────────────────────
+     Admin can set content.media.heroVideo to a URL pointing at any
+     externally-hosted mp4 (Cloudflare R2, GitHub Releases, Bunny CDN,
+     etc.). If empty, we fall back to the data-default-src attribute
+     baked into the <video> element. The scroll-scrub setup re-reads
+     duration on `loadedmetadata`, so swapping the source mid-life is
+     safe — the scrub keeps working with the new clip's timeline. */
+  function hydrateHeroVideo(content) {
+    const video = document.getElementById('heroVideo');
+    if (!video) return;
+    const customUrl = (content && content.media && content.media.heroVideo || '').trim();
+    const defaultUrl = video.dataset.defaultSrc || 'media/hero.mp4';
+    const targetUrl = customUrl || defaultUrl;
+    const source = video.querySelector('source');
+    if (!source) return;
+    /* Compare against the resolved (absolute) URL so we don't reload
+       the video for an identical relative-vs-absolute string. */
+    const currentAbs = source.src;
+    const targetAbs  = new URL(targetUrl, location.href).href;
+    if (currentAbs === targetAbs) return;
+    source.src = targetUrl;
+    try { video.load(); } catch (_) {}
   }
 
   /* ── Contact section: studio maps link, team list, social grid ── */

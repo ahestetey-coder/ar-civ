@@ -696,6 +696,7 @@
   const brandForm     = $('brandForm');
   const bfTitle       = $('bf-title');
   const bfDescription = $('bf-description');
+  const bfHeroVideo   = $('bf-hero-video');
   const bfLogo        = $('bf-logo');
   const bfLogoUpload  = $('bf-logo-upload');
   const bfLogoPreview = $('bf-logo-preview');
@@ -836,8 +837,10 @@
     const brand = (content && content.brand) || {};
     const meta  = (content && content.meta)  || {};
     const nav   = (content && content.nav)   || {};
+    const media = (content && content.media) || {};
     if (bfTitle)       bfTitle.value       = meta.title       || '';
     if (bfDescription) bfDescription.value = meta.description || '';
+    if (bfHeroVideo)   bfHeroVideo.value   = media.heroVideo  || '';
     if (bfLogo)        bfLogo.value        = brand.logoUrl    || '';
     if (bfFavicon)     bfFavicon.value     = brand.faviconUrl || '';
     Object.keys(bfNav).forEach(k => {
@@ -874,10 +877,14 @@
       content.brand = content.brand || {};
       content.meta  = content.meta  || {};
       content.nav   = content.nav   || {};
+      content.media = content.media || {};
       content.meta.title       = (bfTitle && bfTitle.value || '').trim();
       content.meta.description = (bfDescription && bfDescription.value || '').trim();
       content.brand.logoUrl    = (bfLogo.value || '').trim();
       content.brand.faviconUrl = (bfFavicon.value || '').trim();
+      const heroVideo = (bfHeroVideo && bfHeroVideo.value || '').trim();
+      if (heroVideo) content.media.heroVideo = heroVideo;
+      else           delete content.media.heroVideo;   /* empty → default video */
       Object.keys(bfNav).forEach(k => {
         const v = bfNav[k] ? bfNav[k].value.trim() : '';
         if (v) content.nav[k] = v;

@@ -757,16 +757,40 @@
       return db - da;
     });
 
-    feed.innerHTML = sorted.map((p) => {
+    feed.innerHTML = sorted.map((p, postIdx) => {
       const date = fmtBlogDate(p.date) || '';
-      const img = p.image
-        ? `<figure class="blogpost__cover"><img src="${escapeHtmlSafe(p.image)}" alt="" loading="lazy" decoding="async"/></figure>`
-        : '';
-      /* Body is allowed to contain HTML (admin enters paragraphs) */
+      /* Backward compat: old posts may have singular `image`; new ones use `images: []` */
+      const imgs = Array.isArray(p.images) ? p.images.filter(Boolean)
+                 : p.image ? [p.image] : [];
+
+      let cover = '';
+      if (imgs.length === 1) {
+        cover = `<figure class="blogpost__cover"><img src="${escapeHtmlSafe(imgs[0])}" alt="" loading="lazy" decoding="async"/></figure>`;
+      } else if (imgs.length > 1) {
+        const slides = imgs.map((u, i) =>
+          `<figure class="blogpost__slide${i === 0 ? ' is-on' : ''}" data-i="${i}"><img src="${escapeHtmlSafe(u)}" alt="" loading="lazy" decoding="async"/></figure>`
+        ).join('');
+        const dots = imgs.map((_, i) =>
+          `<button type="button" class="blogpost__dot${i === 0 ? ' is-on' : ''}" data-i="${i}" aria-label="Görsel ${i + 1}"></button>`
+        ).join('');
+        cover = `
+          <div class="blogpost__carousel" data-blog-carousel="${postIdx}" data-count="${imgs.length}">
+            <div class="blogpost__stage">${slides}</div>
+            <button type="button" class="blogpost__nav blogpost__nav--prev" data-dir="-1" aria-label="Önceki görsel">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button type="button" class="blogpost__nav blogpost__nav--next" data-dir="1" aria-label="Sonraki görsel">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+            <div class="blogpost__dots">${dots}</div>
+            <span class="blogpost__counter num">1 / ${imgs.length}</span>
+          </div>
+        `;
+      }
       const body = p.content || '';
       return `
         <article class="blogpost">
-          ${img}
+          ${cover}
           <div class="blogpost__head">
             ${date ? `<time class="blogpost__date" datetime="${escapeHtmlSafe(p.date || '')}">${date}</time>` : ''}
             <h2 class="blogpost__title">${escapeHtmlSafe(p.title)}</h2>
@@ -776,6 +800,39 @@
         </article>
       `;
     }).join('');
+
+    /* Wire up each carousel's prev/next/dot interactions */
+    feed.querySelectorAll('[data-blog-carousel]').forEach(wireBlogCarousel);
+  }
+
+  function wireBlogCarousel(root) {
+    const count = parseInt(root.dataset.count, 10) || 0;
+    if (count < 2) return;
+    let idx = 0;
+    const slides = root.querySelectorAll('.blogpost__slide');
+    const dots = root.querySelectorAll('.blogpost__dot');
+    const counter = root.querySelector('.blogpost__counter');
+    function show(n) {
+      idx = ((n % count) + count) % count;
+      slides.forEach((s, i) => s.classList.toggle('is-on', i === idx));
+      dots.forEach((d, i) => d.classList.toggle('is-on', i === idx));
+      if (counter) counter.textContent = (idx + 1) + ' / ' + count;
+    }
+    root.querySelectorAll('.blogpost__nav').forEach((btn) => {
+      btn.addEventListener('click', () => show(idx + parseInt(btn.dataset.dir, 10)));
+    });
+    root.querySelectorAll('.blogpost__dot').forEach((btn) => {
+      btn.addEventListener('click', () => show(parseInt(btn.dataset.i, 10) || 0));
+    });
+    /* Touch swipe */
+    let startX = null;
+    root.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    root.addEventListener('touchend', (e) => {
+      if (startX == null) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 40) show(idx + (dx > 0 ? -1 : 1));
+      startX = null;
+    }, { passive: true });
   }
 
   /* ── Hero video swap ─────────────────────────

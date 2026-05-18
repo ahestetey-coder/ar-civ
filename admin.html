@@ -11,6 +11,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="admin.css" />
+  <!-- Quill rich text editor (used by the Blog editor only) -->
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js" defer></script>
 </head>
 <body class="admin">
   <!-- Login is handled by /middleware.js + /login.html — anyone reaching
@@ -629,22 +632,29 @@
           <textarea id="blf-excerpt" rows="2" placeholder="Yazının ne hakkında olduğunu özetleyen bir-iki cümle."></textarea>
         </div>
 
-        <div class="field">
-          <label for="blf-image">Kapak görseli URL (opsiyonel)</label>
-          <div class="combo">
-            <input id="blf-image" type="url" placeholder="https://..." spellcheck="false" />
-            <label class="upload" for="blf-image-upload">
-              <input id="blf-image-upload" type="file" accept="image/*" hidden />
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-              <span>Bilgisayardan</span>
+        <!-- Gallery editor — first image is the cover/hero -->
+        <div class="field galleryfield">
+          <label>Görseller</label>
+          <span class="hint">İlk görsel kart kapağıdır. Birden fazla görsel eklersen ziyaretçi okları/noktaları ile gezebilir.</span>
+          <ol class="gallery" id="blf-gallery" role="list"></ol>
+          <div class="gallery__add">
+            <input type="url" id="blf-gallery-url" placeholder="https://... (URL veya boş bırak, dosya yükle)" />
+            <input type="file" id="blf-gallery-upload" accept="image/*" multiple hidden />
+            <label for="blf-gallery-upload" class="btn btn--ghost btn--sm">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <span>Yükle</span>
             </label>
+            <button type="button" id="blf-gallery-add" class="btn btn--primary btn--sm">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+              <span>Galeriye ekle</span>
+            </button>
           </div>
         </div>
 
         <div class="field">
-          <label for="blf-content">İçerik <span class="req">*</span></label>
-          <textarea id="blf-content" rows="12" required placeholder="Paragrafları boş satırla ayır. HTML kullanabilirsin: &lt;p&gt;, &lt;h2&gt;, &lt;a href=&quot;...&quot;&gt;, &lt;blockquote&gt;, &lt;img src=&quot;...&quot;&gt;"></textarea>
-          <span class="hint">Düz metin yazarsan paragraflar otomatik oluşur. Vurgu, başlık veya bağlantı için HTML etiketi yazabilirsin.</span>
+          <label>İçerik <span class="req">*</span></label>
+          <div id="blf-content-editor" class="rte"></div>
+          <span class="hint">Üstteki araç çubuğundan başlık, kalın, italik, liste, alıntı ve link ekleyebilirsin.</span>
         </div>
 
         <div class="form__actions">

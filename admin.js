@@ -1481,14 +1481,40 @@
   const fTitle    = $('blf-title');
   const fDate     = $('blf-date');
   const fExcerpt  = $('blf-excerpt');
-  const fImage    = $('blf-image');
-  const fImageUp  = $('blf-image-upload');
-  const fContent  = $('blf-content');
+  const fGallery  = $('blf-gallery');
+  const fGalUrl   = $('blf-gallery-url');
+  const fGalUp    = $('blf-gallery-upload');
+  const fGalAdd   = $('blf-gallery-add');
+  const fEditorEl = $('blf-content-editor');
   const toastEl   = $('toast');
 
   if (!list) return;
 
   let editingId = null;
+  let editingImages = [];
+
+  /* Initialize Quill once the script is available (it's deferred). */
+  let quill = null;
+  function ensureQuill() {
+    if (quill) return quill;
+    if (typeof Quill === 'undefined' || !fEditorEl) return null;
+    quill = new Quill(fEditorEl, {
+      theme: 'snow',
+      placeholder: 'Yazıya başla…',
+      modules: {
+        toolbar: [
+          [{ header: [2, 3, false] }],
+          ['bold', 'italic', 'underline'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['blockquote', 'link', 'image'],
+          ['clean'],
+        ],
+      },
+    });
+    return quill;
+  }
+  document.addEventListener('DOMContentLoaded', ensureQuill);
+  ensureQuill();
 
   function escapeHtml(s) {
     return String(s == null ? '' : s)
@@ -1560,7 +1586,29 @@
   }
   window.refreshBlogList = refreshBlogList;
 
+  function renderGalleryRows() {
+    if (!fGallery) return;
+    fGallery.innerHTML = editingImages.map((u, i) => ''
+      + '<li class="galleryrow" data-i="' + i + '">'
+      + '<img class="galleryrow__thumb" src="' + escapeHtml(u) + '" alt="" onerror="this.style.opacity=0.2"/>'
+      + '<input type="url" class="galleryrow__url" value="' + escapeHtml(u) + '" />'
+      + '<button type="button" class="ic ic--del" data-act="del-img" aria-label="Görseli sil">'
+      + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/></svg>'
+      + '</button>'
+      + '</li>'
+    ).join('');
+  }
+  function captureGalleryFromDOM() {
+    if (!fGallery) return;
+    editingImages = Array.from(fGallery.querySelectorAll('.galleryrow__url'))
+      .map(inp => inp.value.trim())
+      .filter(Boolean);
+  }
   function openEditor(post) {
+    /* Backward compat: post.image → editingImages */
+    const imgs = post && Array.isArray(post.images) ? post.images.slice()
+              : post && post.image ? [post.image]
+              : [];
     if (post) {
       editingId = post.id;
       editorKicker.textContent = 'Yazı düzenle';
@@ -1568,8 +1616,7 @@
       fTitle.value   = post.title   || '';
       fDate.value    = post.date    || '';
       fExcerpt.value = post.excerpt || '';
-      fImage.value   = post.image   || '';
-      fContent.value = post.content || '';
+      editingImages = imgs;
       if (deleteBtn) deleteBtn.hidden = false;
     } else {
       editingId = null;
@@ -1578,10 +1625,12 @@
       fTitle.value = '';
       fDate.value  = new Date().toISOString().slice(0, 10);
       fExcerpt.value = '';
-      fImage.value = '';
-      fContent.value = '';
+      editingImages = [];
       if (deleteBtn) deleteBtn.hidden = true;
     }
+    renderGalleryRows();
+    const q = ensureQuill();
+    if (q) q.root.innerHTML = (post && post.content) || '';
     if (editor) editor.hidden = false;
     if (fTitle) fTitle.focus();
     refreshBlogList();
@@ -1604,15 +1653,44 @@
     if (p) openEditor(p);
   });
 
-  if (fImageUp) {
-    fImageUp.addEventListener('change', (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-      if (file.size > 1.5 * 1024 * 1024) toast('Görsel 1.5 MB üzerinde — küçült veya URL kullan', 'warn');
-      const r = new FileReader();
-      r.onload = (ev) => { fImage.value = ev.target.result; };
-      r.readAsDataURL(file);
+  /* Gallery: add via URL */
+  if (fGalAdd) {
+    fGalAdd.addEventListener('click', () => {
+      captureGalleryFromDOM();
+      const u = (fGalUrl && fGalUrl.value || '').trim();
+      if (u) { editingImages.push(u); fGalUrl.value = ''; }
+      renderGalleryRows();
+    });
+  }
+  /* Gallery: add via file upload */
+  if (fGalUp) {
+    fGalUp.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+      captureGalleryFromDOM();
+      let big = 0;
+      Promise.all(files.map(file => new Promise((res) => {
+        if (file.size > 1.5 * 1024 * 1024) big++;
+        const r = new FileReader();
+        r.onload = (ev) => res(ev.target.result);
+        r.readAsDataURL(file);
+      }))).then(urls => {
+        urls.forEach(u => editingImages.push(u));
+        if (big) toast(big + ' görsel 1.5 MB üzerinde — küçült veya URL kullan', 'warn');
+        renderGalleryRows();
+      });
       e.target.value = '';
+    });
+  }
+  /* Gallery: delete one + sync URLs back to state on input */
+  if (fGallery) {
+    fGallery.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-act="del-img"]');
+      if (!btn) return;
+      captureGalleryFromDOM();
+      const i = parseInt(btn.closest('.galleryrow').dataset.i, 10);
+      editingImages.splice(i, 1);
+      renderGalleryRows();
     });
   }
 
@@ -1632,13 +1710,19 @@
       e.preventDefault();
       const title = fTitle.value.trim();
       if (!title) { toast('Başlık gerekli', 'warn'); fTitle.focus(); return; }
+      captureGalleryFromDOM();
+      const q = ensureQuill();
+      /* If Quill is empty (just <p><br></p>), treat as no content */
+      let html = q ? q.root.innerHTML : '';
+      if (/^(\s|<p>\s*(<br\s*\/?>)?\s*<\/p>)*$/.test(html)) html = '';
+      if (!html) { toast('İçerik boş', 'warn'); return; }
       const post = {
         id: editingId || ('post_' + Date.now().toString(36)),
         title,
         date: fDate.value.trim() || new Date().toISOString().slice(0, 10),
         excerpt: fExcerpt.value.trim(),
-        image: fImage.value.trim(),
-        content: maybeAutoParagraph(fContent.value),
+        images: editingImages.slice(),
+        content: html,
       };
       const posts = getPosts();
       if (editingId) {

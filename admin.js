@@ -703,6 +703,14 @@
   const bfFaviconUpload = $('bf-favicon-upload');
   const bfFaviconPreview= $('bf-favicon-preview');
   const brandClearBtn = $('brandClearBtn');
+  const bfNav = {
+    approach: $('bf-nav-approach'),
+    services: $('bf-nav-services'),
+    projects: $('bf-nav-projects'),
+    process:  $('bf-nav-process'),
+    studio:   $('bf-nav-studio'),
+    social:   $('bf-nav-social'),
+  };
 
   const featuredList = $('featuredList');
   const projectsList = $('projectsListAdmin');
@@ -827,10 +835,14 @@
   function refreshBrandForm() {
     const brand = (content && content.brand) || {};
     const meta  = (content && content.meta)  || {};
+    const nav   = (content && content.nav)   || {};
     if (bfTitle)       bfTitle.value       = meta.title       || '';
     if (bfDescription) bfDescription.value = meta.description || '';
     if (bfLogo)        bfLogo.value        = brand.logoUrl    || '';
     if (bfFavicon)     bfFavicon.value     = brand.faviconUrl || '';
+    Object.keys(bfNav).forEach(k => {
+      if (bfNav[k]) bfNav[k].value = nav[k] || '';
+    });
     applyBrandPreview(bfLogo,    bfLogoPreview);
     applyBrandPreview(bfFavicon, bfFaviconPreview);
   }
@@ -861,14 +873,17 @@
       if (!content) return;
       content.brand = content.brand || {};
       content.meta  = content.meta  || {};
+      content.nav   = content.nav   || {};
       content.meta.title       = (bfTitle && bfTitle.value || '').trim();
       content.meta.description = (bfDescription && bfDescription.value || '').trim();
       content.brand.logoUrl    = (bfLogo.value || '').trim();
       content.brand.faviconUrl = (bfFavicon.value || '').trim();
+      Object.keys(bfNav).forEach(k => {
+        const v = bfNav[k] ? bfNav[k].value.trim() : '';
+        if (v) content.nav[k] = v;
+        else delete content.nav[k];   /* empty → fall back to HTML default */
+      });
       persist();
-      /* Title change reflects on the LIVE site only after publish.
-         Update document.title in the admin tab too for instant feedback
-         on browser-tab UI elsewhere isn't relevant — admin keeps its own. */
       toast('Marka kaydedildi · canlı sayfa otomatik güncellenir');
     });
   }

@@ -2011,3 +2011,43 @@ body.is-editing-site a[href]:not(.editbar-site__btn):not([data-edit-key]) {
   color: var(--ink-2);
   font-style: italic;
 }
+
+/* ────────────────────────────────────────────────────────────────
+   MOBILE NAV — between hero and approach. Desktop already has the
+   topbar nav, so this strip is mobile-only. Hidden by default,
+   shown only at <760px viewports.
+   ────────────────────────────────────────────────────────────── */
+.mobile-nav { display: none; }
+@media (max-width: 760px) {
+  .mobile-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px var(--pad);
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    z-index: 3;
+    position: relative;
+  }
+  .mobile-nav a {
+    display: inline-flex; align-items: center;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    transition: border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
+  }
+  .mobile-nav a:hover,
+  .mobile-nav a:focus-visible {
+    border-color: var(--accent-line);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  /* hidden-link entries (Günlük / Blog when empty) collapse cleanly */
+  .mobile-nav a[hidden] { display: none; }
+}

@@ -1049,13 +1049,39 @@
     const targetUrl = customUrl || defaultUrl;
     const source = video.querySelector('source');
     if (!source) return;
+
     /* Compare against the resolved (absolute) URL so we don't reload
        the video for an identical relative-vs-absolute string. */
-    const currentAbs = source.src;
-    const targetAbs  = new URL(targetUrl, location.href).href;
-    if (currentAbs === targetAbs) return;
+    let targetAbs;
+    try { targetAbs = new URL(targetUrl, location.href).href; }
+    catch (_) { targetAbs = targetUrl; }
+    if (source.src === targetAbs) return;
+
+    /* Derive a sensible <source type> from the extension. Cloudinary,
+       R2, GitHub Releases, etc. all serve direct .mp4/.webm/.mov. */
+    const ext = String(targetUrl).toLowerCase().split('?')[0].split('#')[0].split('.').pop();
+    const typeMap = { mp4: 'video/mp4', webm: 'video/webm', mov: 'video/quicktime', ogv: 'video/ogg', ogg: 'video/ogg', m4v: 'video/mp4' };
+    const newType = typeMap[ext] || 'video/mp4';
+
+    /* Defensive: pause first, then swap the source AND the type, then load(). */
+    try { video.pause(); } catch (_) {}
     source.src = targetUrl;
+    source.type = newType;
+    /* Some browsers also need the src on the <video> element itself */
+    try { video.removeAttribute('src'); } catch (_) {}
     try { video.load(); } catch (_) {}
+
+    /* Surface load errors to the console so the admin can see exactly
+       what went wrong if the URL is bad / blocked / wrong format. */
+    if (!video.dataset.errorWired) {
+      video.dataset.errorWired = '1';
+      video.addEventListener('error', () => {
+        const err = video.error;
+        const code = err ? err.code : 'unknown';
+        const msg = err ? (err.message || '') : '';
+        console.warn('[hero video] load failed', { code, message: msg, src: source.src });
+      });
+    }
   }
 
   /* ── Contact section: studio maps link, team list, social grid ── */

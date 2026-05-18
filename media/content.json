@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-05-10T09:46:54.691Z",
+  "updatedAt": "2026-05-18T06:58:14.504Z",
   "brand": {
     "word": "",
     "subtitle": "Mimarlık & İnşaat",
@@ -485,5 +485,17 @@
   "meta": {
     "title": "AR.CİV  ·  Mimarlık & İnşaat  ·  DENİZLİ",
     "description": "AR.CİV Mimarlık & İnşaat, Denizli’de estetik, modern ve sürdürülebilir mimari projeler üreten profesyonel mimarlık ofisidir."
+  },
+  "blog": {
+    "posts": [
+      {
+        "id": "post_mpaurcc7",
+        "title": "Deneme blog Başlığı",
+        "date": "2026-05-18",
+        "excerpt": "Yeni website için blog yazısı denemesi",
+        "image": "https://hizliresim.com/4ku81or",
+        "content": "<p>Bu bir deneme yazısı şuan blog yazmayı deniyoruz.</p>"
+      }
+    ]
   }
 }

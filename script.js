@@ -751,11 +751,22 @@
     }
     if (empty) empty.hidden = true;
 
+    /* Sort newest-first by date; fall back to post id (which contains
+       a creation timestamp) so posts created on the same day still keep
+       a stable, newest-first order. */
     const sorted = posts.slice().sort((a, b) => {
       const da = new Date(a.date || 0).getTime();
       const db = new Date(b.date || 0).getTime();
-      return db - da;
+      if (db !== da) return db - da;
+      return String(b.id || '').localeCompare(String(a.id || ''));
     });
+
+    /* Strip tags from content for a fallback excerpt when none provided */
+    function fallbackExcerpt(html) {
+      const text = String(html || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      if (!text) return '';
+      return text.length <= 180 ? text : text.slice(0, 180).trim() + '…';
+    }
 
     feed.innerHTML = sorted.map((p, postIdx) => {
       const date = fmtBlogDate(p.date) || '';
@@ -763,17 +774,21 @@
       const imgs = Array.isArray(p.images) ? p.images.filter(Boolean)
                  : p.image ? [p.image] : [];
 
-      let cover = '';
-      if (imgs.length === 1) {
-        cover = `<figure class="blogpost__cover"><img src="${escapeHtmlSafe(imgs[0])}" alt="" loading="lazy" decoding="async"/></figure>`;
-      } else if (imgs.length > 1) {
+      /* Preview thumbnail = first image (if any) */
+      const thumb = imgs.length
+        ? `<figure class="blogpost__thumb"><img src="${escapeHtmlSafe(imgs[0])}" alt="" loading="lazy" decoding="async"/></figure>`
+        : '';
+
+      /* Full-view carousel: only if 2+ images (single image is shown as thumb) */
+      let gallery = '';
+      if (imgs.length > 1) {
         const slides = imgs.map((u, i) =>
           `<figure class="blogpost__slide${i === 0 ? ' is-on' : ''}" data-i="${i}"><img src="${escapeHtmlSafe(u)}" alt="" loading="lazy" decoding="async"/></figure>`
         ).join('');
         const dots = imgs.map((_, i) =>
           `<button type="button" class="blogpost__dot${i === 0 ? ' is-on' : ''}" data-i="${i}" aria-label="Görsel ${i + 1}"></button>`
         ).join('');
-        cover = `
+        gallery = `
           <div class="blogpost__carousel" data-blog-carousel="${postIdx}" data-count="${imgs.length}">
             <div class="blogpost__stage">${slides}</div>
             <button type="button" class="blogpost__nav blogpost__nav--prev" data-dir="-1" aria-label="Önceki görsel">
@@ -787,22 +802,83 @@
           </div>
         `;
       }
+
       const body = p.content || '';
+      const excerpt = (p.excerpt || '').trim() || fallbackExcerpt(body);
+      const postId = escapeHtmlSafe(p.id || '');
+
       return `
-        <article class="blogpost">
-          ${cover}
-          <div class="blogpost__head">
-            ${date ? `<time class="blogpost__date" datetime="${escapeHtmlSafe(p.date || '')}">${date}</time>` : ''}
-            <h2 class="blogpost__title">${escapeHtmlSafe(p.title)}</h2>
-            ${p.excerpt ? `<p class="blogpost__excerpt">${escapeHtmlSafe(p.excerpt)}</p>` : ''}
+        <article class="blogpost is-collapsed" data-post-id="${postId}">
+          <header class="blogpost__preview">
+            ${thumb}
+            <div class="blogpost__meta">
+              ${date ? `<time class="blogpost__date" datetime="${escapeHtmlSafe(p.date || '')}">${date}</time>` : ''}
+              <h2 class="blogpost__title">${escapeHtmlSafe(p.title)}</h2>
+              ${excerpt ? `<p class="blogpost__excerpt">${escapeHtmlSafe(excerpt)}</p>` : ''}
+              <button type="button" class="blogpost__toggle" aria-expanded="false">
+                <span class="blogpost__toggle__label">Devamını oku</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </header>
+          <div class="blogpost__full">
+            ${gallery}
+            <div class="blogpost__body">${body}</div>
+            <button type="button" class="blogpost__collapse" aria-label="Kapat">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+              <span>Kısalt</span>
+            </button>
           </div>
-          <div class="blogpost__body">${body}</div>
         </article>
       `;
     }).join('');
 
     /* Wire up each carousel's prev/next/dot interactions */
     feed.querySelectorAll('[data-blog-carousel]').forEach(wireBlogCarousel);
+    /* Wire expand/collapse toggles per post */
+    feed.querySelectorAll('.blogpost').forEach(wireBlogToggle);
+
+    /* Auto-expand if URL has #post=ID */
+    const hash = location.hash || '';
+    const m = hash.match(/^#post=(.+)$/);
+    if (m) {
+      const target = feed.querySelector(`[data-post-id="${CSS.escape(m[1])}"]`);
+      if (target) {
+        target.classList.remove('is-collapsed');
+        target.classList.add('is-expanded');
+        const btn = target.querySelector('.blogpost__toggle');
+        if (btn) btn.setAttribute('aria-expanded', 'true');
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }
+
+  function wireBlogToggle(article) {
+    const toggleBtn = article.querySelector('.blogpost__toggle');
+    const collapseBtn = article.querySelector('.blogpost__collapse');
+    function expand() {
+      article.classList.remove('is-collapsed');
+      article.classList.add('is-expanded');
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+      const label = toggleBtn && toggleBtn.querySelector('.blogpost__toggle__label');
+      if (label) label.textContent = 'Kısalt';
+      /* Update URL hash so links are shareable, without scrolling */
+      const id = article.dataset.postId;
+      if (id) history.replaceState(null, '', '#post=' + encodeURIComponent(id));
+    }
+    function collapse() {
+      article.classList.add('is-collapsed');
+      article.classList.remove('is-expanded');
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+      const label = toggleBtn && toggleBtn.querySelector('.blogpost__toggle__label');
+      if (label) label.textContent = 'Devamını oku';
+      history.replaceState(null, '', location.pathname + location.search);
+      article.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    if (toggleBtn)   toggleBtn.addEventListener('click', () => {
+      if (article.classList.contains('is-expanded')) collapse(); else expand();
+    });
+    if (collapseBtn) collapseBtn.addEventListener('click', collapse);
   }
 
   function wireBlogCarousel(root) {

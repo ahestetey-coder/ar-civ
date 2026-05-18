@@ -707,9 +707,75 @@
     hydrateBranding(content);
     hydrateContact(content);
     hydrateHeroVideo(content);
+    hydrateBlog(content);
     /* Hydration may have just written 'İletişim — 08' from a stale content.json;
        re-sync the contact-kicker number based on the actual social section state. */
     if (typeof window.__syncContactNum === 'function') window.__syncContactNum();
+  }
+
+  /* ── Blog: topbar link visibility + post rendering on /blog.html ──
+     The blog is only an "active" part of the site once at least one
+     post exists. The topbar 'Blog' link is hidden by default and
+     revealed when content.blog.posts has at least one entry. */
+  function fmtBlogDate(iso) {
+    try {
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return '';
+      return d.toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' });
+    } catch (_) { return ''; }
+  }
+  function escapeHtmlSafe(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function hydrateBlog(content) {
+    const blog = (content && content.blog) || {};
+    const posts = Array.isArray(blog.posts) ? blog.posts.filter(p => p && p.title) : [];
+
+    /* Toggle the topbar 'Blog' link everywhere (index + blog.html) */
+    document.querySelectorAll('[data-link="blog"]').forEach(el => {
+      el.hidden = posts.length === 0;
+    });
+
+    /* Render posts only if we're on the blog page (the feed container
+       lives there). Newest-first by date, falling back to array order. */
+    const feed = document.getElementById('blogFeed');
+    const empty = document.getElementById('blogEmpty');
+    if (!feed) return;
+
+    if (!posts.length) {
+      feed.innerHTML = '';
+      if (empty) empty.hidden = false;
+      return;
+    }
+    if (empty) empty.hidden = true;
+
+    const sorted = posts.slice().sort((a, b) => {
+      const da = new Date(a.date || 0).getTime();
+      const db = new Date(b.date || 0).getTime();
+      return db - da;
+    });
+
+    feed.innerHTML = sorted.map((p) => {
+      const date = fmtBlogDate(p.date) || '';
+      const img = p.image
+        ? `<figure class="blogpost__cover"><img src="${escapeHtmlSafe(p.image)}" alt="" loading="lazy" decoding="async"/></figure>`
+        : '';
+      /* Body is allowed to contain HTML (admin enters paragraphs) */
+      const body = p.content || '';
+      return `
+        <article class="blogpost">
+          ${img}
+          <div class="blogpost__head">
+            ${date ? `<time class="blogpost__date" datetime="${escapeHtmlSafe(p.date || '')}">${date}</time>` : ''}
+            <h2 class="blogpost__title">${escapeHtmlSafe(p.title)}</h2>
+            ${p.excerpt ? `<p class="blogpost__excerpt">${escapeHtmlSafe(p.excerpt)}</p>` : ''}
+          </div>
+          <div class="blogpost__body">${body}</div>
+        </article>
+      `;
+    }).join('');
   }
 
   /* ── Hero video swap ─────────────────────────

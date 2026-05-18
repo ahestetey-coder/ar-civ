@@ -76,6 +76,10 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         <span>İletişim</span>
       </button>
+      <button type="button" class="adtab" role="tab" aria-selected="false" data-tab="blog" id="adtabBlog">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+        <span>Blog</span>
+      </button>
     </div>
   </nav>
 
@@ -570,6 +574,82 @@
         </fieldset>
 
         <div class="form__actions">
+          <button type="submit" class="btn btn--primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+            <span>Kaydet</span>
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- ────────── BLOG TAB ────────── -->
+  <main class="admin__shell adtabpanel" id="tabBlog" role="tabpanel" aria-labelledby="adtabBlog" hidden>
+    <section class="adcard adcard--list">
+      <header class="adcard__head adcard__head--row">
+        <div>
+          <span class="kicker kicker--accent">Blog</span>
+          <h2>Yazılar.</h2>
+          <p class="muted">En az bir yazı eklendiğinde "Blog" linki sitenin üst barına otomatik düşer. Hepsini silersen link tekrar gizlenir.</p>
+        </div>
+        <button type="button" id="blogAddBtn" class="btn btn--ghost">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          <span>Yeni yazı</span>
+        </button>
+      </header>
+
+      <ol class="projlist" id="blogList" role="list"></ol>
+    </section>
+
+    <section class="adcard adcard--editor" id="blogEditor" hidden>
+      <header class="adcard__head adcard__head--row">
+        <div>
+          <span class="kicker kicker--accent" id="blogEditorKicker">Yeni yazı</span>
+          <h2 id="blogEditorTitle">Yazı düzenle</h2>
+        </div>
+        <button type="button" id="blogCloseBtn" class="btn btn--ghost" aria-label="Kapat">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+
+      <form id="blogForm" class="form" autocomplete="off">
+        <div class="form__row">
+          <div class="field">
+            <label for="blf-title">Başlık <span class="req">*</span></label>
+            <input id="blf-title" type="text" required placeholder="Örnek: Şantiyede ilk hafta — bekarlık öğrenimi" />
+          </div>
+          <div class="field">
+            <label for="blf-date">Tarih</label>
+            <input id="blf-date" type="date" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="blf-excerpt">Özet (opsiyonel — kart üstünde 1-2 cümle)</label>
+          <textarea id="blf-excerpt" rows="2" placeholder="Yazının ne hakkında olduğunu özetleyen bir-iki cümle."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="blf-image">Kapak görseli URL (opsiyonel)</label>
+          <div class="combo">
+            <input id="blf-image" type="url" placeholder="https://..." spellcheck="false" />
+            <label class="upload" for="blf-image-upload">
+              <input id="blf-image-upload" type="file" accept="image/*" hidden />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <span>Bilgisayardan</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="blf-content">İçerik <span class="req">*</span></label>
+          <textarea id="blf-content" rows="12" required placeholder="Paragrafları boş satırla ayır. HTML kullanabilirsin: &lt;p&gt;, &lt;h2&gt;, &lt;a href=&quot;...&quot;&gt;, &lt;blockquote&gt;, &lt;img src=&quot;...&quot;&gt;"></textarea>
+          <span class="hint">Düz metin yazarsan paragraflar otomatik oluşur. Vurgu, başlık veya bağlantı için HTML etiketi yazabilirsin.</span>
+        </div>
+
+        <div class="form__actions">
+          <button type="button" id="blogDeleteBtn" class="btn btn--danger" hidden>Sil</button>
+          <button type="button" id="blogCancelBtn" class="btn btn--ghost">Vazgeç</button>
           <button type="submit" class="btn btn--primary">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
             <span>Kaydet</span>

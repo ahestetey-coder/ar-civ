@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <title data-edit-key="meta.titleBlog">Blog — AR-CİV</title>
+  <meta name="description" data-edit-key="meta.description" data-edit-attr="content" content="AR-CİV blog — atölyenin günce ve yazıları." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link id="favicon" rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='14' fill='%231a1816'/%3E%3Cpath d='M22 70h56M22 50h56M22 30h56' stroke='%23b87856' stroke-width='4' stroke-linecap='square'/%3E%3C/svg%3E" />
+  <script>
+    (function () {
+      try {
+        var raw = localStorage.getItem('strata.content');
+        var c = raw ? JSON.parse(raw) : null;
+        var brand = c && c.brand;
+        if (!brand) return;
+        if (brand.logoUrl) {
+          var s = document.createElement('style');
+          s.textContent =
+            '.brand__mark{background:url(' + JSON.stringify(brand.logoUrl) +
+            ') center/contain no-repeat!important;background-color:transparent!important;border:0!important}' +
+            '.brand__mark>svg{display:none!important}';
+          document.head.appendChild(s);
+        }
+        if (brand.faviconUrl) {
+          var fav = document.getElementById('favicon');
+          if (fav) fav.href = brand.faviconUrl;
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">İçeriğe atla</a>
+
+  <header class="topbar is-stuck" id="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="index.html" aria-label="AR-CİV ana sayfa">
+        <span class="brand__mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M3 16h16M3 11h16M3 6h16" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/>
+          </svg>
+        </span>
+        <span class="brand__word" data-edit-key="brand.word"></span>
+        <span class="brand__sub" data-edit-key="brand.subtitle"></span>
+      </a>
+      <nav class="topbar__nav" aria-label="Birincil">
+        <a href="index.html#approach" data-edit-key="nav.approach">Yaklaşım</a>
+        <a href="index.html#services" data-edit-key="nav.services">Hizmetler</a>
+        <a href="index.html#projects" data-edit-key="nav.projects">Projeler</a>
+        <a href="index.html#process"  data-edit-key="nav.process">Süreç</a>
+        <a href="index.html#studio"   data-edit-key="nav.studio">Atölye</a>
+        <a href="index.html#social"   data-link="social" data-edit-key="nav.social">Günlük</a>
+        <a href="blog.html"           data-link="blog"   data-edit-key="nav.blog" class="is-current">Blog</a>
+      </nav>
+      <a class="btn btn--ghost" href="index.html#contact">
+        <span>İletişim</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main" class="bloglist">
+    <header class="bloglist__head section__head reveal">
+      <span class="kicker kicker--accent" data-edit-key="blog.kicker">Günce</span>
+      <h1 class="display-h" data-edit-key="blog.title">Blog.</h1>
+      <p class="muted" data-edit-key="blog.intro">Atölyenin günce ve yazıları — saha notları, kararlar, kısa düşünceler.</p>
+    </header>
+
+    <div class="bloglist__feed" id="blogFeed" aria-live="polite"></div>
+
+    <p class="bloglist__empty" id="blogEmpty" hidden>
+      <span>Henüz yazı yok.</span>
+      <a class="link" href="index.html">← Ana sayfa</a>
+    </p>
+  </main>
+
+  <footer class="foot">
+    <div class="foot__inner">
+      <div class="foot__brand">
+        <span class="brand__word brand__word--lg" data-edit-key="brand.word"></span>
+        <span class="muted" data-edit-key="footer.tagline">Mimarlık & İnşaat — İstanbul · 2003 — 2026</span>
+      </div>
+      <nav class="foot__nav" aria-label="Alt navigasyon">
+        <div>
+          <h5>Stüdyo</h5>
+          <ul>
+            <li><a href="index.html#approach">Yaklaşım</a></li>
+            <li><a href="index.html#studio">Atölye</a></li>
+            <li><a href="index.html#process">Süreç</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>İş</h5>
+          <ul>
+            <li><a href="index.html#services">Hizmetler</a></li>
+            <li><a href="index.html#projects">Projeler</a></li>
+            <li><a href="index.html#contact">İletişim</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Yasal</h5>
+          <ul>
+            <li><a href="#">Gizlilik</a></li>
+            <li><a href="#">KVKK</a></li>
+            <li><a href="#">Çerezler</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="foot__base">
+      <span data-edit-key="footer.address">Tatlı Sokak No. 14, Bomonti — Şişli, İstanbul</span>
+      <span class="num" data-edit-key="footer.phone">+90 (212) 347 18 92</span>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

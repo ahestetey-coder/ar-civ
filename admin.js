@@ -685,10 +685,12 @@
   const tabSoc    = $('adtabSocial');
   const tabBrand  = $('adtabBrand');
   const tabContact= $('adtabContact');
+  const tabBlog   = $('adtabBlog');
   const panelProj = $('tabProjects');
   const panelSoc  = $('tabSocial');
   const panelBrand= $('tabBrand');
   const panelContact = $('tabContact');
+  const panelBlog = $('tabBlog');
   const footProj  = $('adminfootProjects');
   const footSoc   = document.querySelector('#tabSocial .adminfoot');
 
@@ -804,8 +806,8 @@
 
   /* ── Tab switching ───────────────────────────── */
   function activate(tab) {
-    const tabs = { projects: tabProj, social: tabSoc, brand: tabBrand, contact: tabContact };
-    const panels = { projects: panelProj, social: panelSoc, brand: panelBrand, contact: panelContact };
+    const tabs = { projects: tabProj, social: tabSoc, brand: tabBrand, contact: tabContact, blog: tabBlog };
+    const panels = { projects: panelProj, social: panelSoc, brand: panelBrand, contact: panelContact, blog: panelBlog };
     Object.entries(tabs).forEach(([k, btn]) => {
       if (!btn) return;
       const on = (k === tab);
@@ -817,12 +819,14 @@
     if (footSoc)  footSoc.style.display  = (tab === 'social')   ? 'block' : 'none';
     if (tab === 'brand')   refreshBrandForm();
     if (tab === 'contact') refreshContactForm();
+    if (tab === 'blog' && typeof refreshBlogList === 'function') refreshBlogList();
     try { localStorage.setItem('strata.adminTab', tab); } catch (_) {}
   }
   tabProj.addEventListener('click', () => activate('projects'));
   tabSoc.addEventListener('click',  () => activate('social'));
   if (tabBrand)   tabBrand.addEventListener('click',   () => activate('brand'));
   if (tabContact) tabContact.addEventListener('click', () => activate('contact'));
+  if (tabBlog)    tabBlog.addEventListener('click',    () => activate('blog'));
 
   /* ── Brand tab: logo + favicon uploads ──────── */
   function applyBrandPreview(input, previewBox) {
@@ -1354,7 +1358,7 @@
 
     /* restore last active tab */
     const lastTab = (() => { try { return localStorage.getItem('strata.adminTab'); } catch (_) { return null; } })();
-    const validTab = ['projects', 'social', 'brand', 'contact'].includes(lastTab) ? lastTab : 'projects';
+    const validTab = ['projects', 'social', 'brand', 'contact', 'blog'].includes(lastTab) ? lastTab : 'projects';
     activate(validTab);
   })();
 
@@ -1451,4 +1455,207 @@
   }
 
   btn.addEventListener('click', publish);
+})();
+
+
+/* ════════════════════════════════════════════════════════════════════
+   BLOG TAB — CRUD for content.blog.posts.
+
+   Posts are stored alongside other content in localStorage 'strata.content'
+   and pushed to GitHub via /api/publish. The site reads them on
+   /blog.html and on the topbar to toggle the 'Blog' link.
+   ════════════════════════════════════════════════════════════════════ */
+(() => {
+  const CONTENT_KEY = 'strata.content';
+  const $ = (id) => document.getElementById(id);
+
+  const list      = $('blogList');
+  const addBtn    = $('blogAddBtn');
+  const editor    = $('blogEditor');
+  const editorKicker = $('blogEditorKicker');
+  const editorTitle  = $('blogEditorTitle');
+  const closeBtn  = $('blogCloseBtn');
+  const cancelBtn = $('blogCancelBtn');
+  const deleteBtn = $('blogDeleteBtn');
+  const form      = $('blogForm');
+  const fTitle    = $('blf-title');
+  const fDate     = $('blf-date');
+  const fExcerpt  = $('blf-excerpt');
+  const fImage    = $('blf-image');
+  const fImageUp  = $('blf-image-upload');
+  const fContent  = $('blf-content');
+  const toastEl   = $('toast');
+
+  if (!list) return;
+
+  let editingId = null;
+
+  function escapeHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function toast(msg, kind) {
+    if (!toastEl) return;
+    toastEl.className = 'toast ' + (kind === 'error' ? 'is-error' : kind === 'warn' ? 'is-warn' : '');
+    toastEl.textContent = msg;
+    requestAnimationFrame(() => toastEl.classList.add('is-on'));
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => toastEl.classList.remove('is-on'), 2800);
+  }
+  function readContent() {
+    try { const raw = localStorage.getItem(CONTENT_KEY); return raw ? JSON.parse(raw) : {}; }
+    catch (_) { return {}; }
+  }
+  function writeContent(c) {
+    c.updatedAt = new Date().toISOString();
+    localStorage.setItem(CONTENT_KEY, JSON.stringify(c));
+  }
+  function getPosts() {
+    const c = readContent();
+    return Array.isArray(c.blog && c.blog.posts) ? c.blog.posts : [];
+  }
+  function setPosts(posts) {
+    const c = readContent();
+    c.blog = c.blog || {};
+    c.blog.posts = posts;
+    writeContent(c);
+  }
+
+  /* If author wrote plain text, wrap paragraphs. If they wrote HTML, leave it. */
+  function maybeAutoParagraph(text) {
+    const t = String(text || '').trim();
+    if (!t) return '';
+    if (/<\w+[^>]*>/.test(t)) return t;
+    return t.split(/\n\s*\n/).map(p => '<p>' + escapeHtml(p).replace(/\n/g, '<br/>') + '</p>').join('\n');
+  }
+  function fmtDateForList(iso) {
+    try { const d = new Date(iso); if (isNaN(d.getTime())) return ''; return d.toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', year: 'numeric' }); }
+    catch (_) { return ''; }
+  }
+
+  function refreshBlogList() {
+    const posts = getPosts();
+    if (!posts.length) {
+      list.innerHTML = '<li class="emptystate"><span>Henüz yazı yok.</span><span class="muted">"Yeni yazı" butonu ile başla.</span></li>';
+      return;
+    }
+    const sorted = posts.slice().sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    list.innerHTML = sorted.map((p) => {
+      const date = fmtDateForList(p.date);
+      const isEditing = (editingId === p.id);
+      const excerptSnippet = p.excerpt ? (p.excerpt.length > 60 ? p.excerpt.slice(0, 60) + '…' : p.excerpt) : '';
+      return ''
+        + '<li class="projitem ' + (isEditing ? 'is-editing' : '') + '" data-id="' + escapeHtml(p.id || '') + '" tabindex="0" role="button">'
+        + '<img class="projitem__cover" alt="" src="' + escapeHtml(p.image || '') + '" onerror="this.style.opacity=0.2"/>'
+        + '<div class="projitem__body">'
+        + '<h3 class="projitem__name">' + escapeHtml(p.title || '(Başlıksız)') + '</h3>'
+        + '<div class="projitem__meta">'
+        + '<span>' + escapeHtml(date) + '</span>'
+        + (excerptSnippet ? '<span class="dot">·</span><span>' + escapeHtml(excerptSnippet) + '</span>' : '')
+        + '</div></div>'
+        + '<span class="projitem__count">düzenle →</span>'
+        + '</li>';
+    }).join('');
+  }
+  window.refreshBlogList = refreshBlogList;
+
+  function openEditor(post) {
+    if (post) {
+      editingId = post.id;
+      editorKicker.textContent = 'Yazı düzenle';
+      editorTitle.textContent = post.title || 'Yazı düzenle';
+      fTitle.value   = post.title   || '';
+      fDate.value    = post.date    || '';
+      fExcerpt.value = post.excerpt || '';
+      fImage.value   = post.image   || '';
+      fContent.value = post.content || '';
+      if (deleteBtn) deleteBtn.hidden = false;
+    } else {
+      editingId = null;
+      editorKicker.textContent = 'Yeni yazı';
+      editorTitle.textContent = 'Yazı düzenle';
+      fTitle.value = '';
+      fDate.value  = new Date().toISOString().slice(0, 10);
+      fExcerpt.value = '';
+      fImage.value = '';
+      fContent.value = '';
+      if (deleteBtn) deleteBtn.hidden = true;
+    }
+    if (editor) editor.hidden = false;
+    if (fTitle) fTitle.focus();
+    refreshBlogList();
+  }
+  function closeEditor() {
+    editingId = null;
+    if (editor) editor.hidden = true;
+    refreshBlogList();
+  }
+
+  if (addBtn)    addBtn.addEventListener('click', () => openEditor(null));
+  if (closeBtn)  closeBtn.addEventListener('click', closeEditor);
+  if (cancelBtn) cancelBtn.addEventListener('click', closeEditor);
+
+  list.addEventListener('click', (e) => {
+    const li = e.target.closest('.projitem');
+    if (!li) return;
+    const id = li.dataset.id;
+    const p = getPosts().find(x => x.id === id);
+    if (p) openEditor(p);
+  });
+
+  if (fImageUp) {
+    fImageUp.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (file.size > 1.5 * 1024 * 1024) toast('Görsel 1.5 MB üzerinde — küçült veya URL kullan', 'warn');
+      const r = new FileReader();
+      r.onload = (ev) => { fImage.value = ev.target.result; };
+      r.readAsDataURL(file);
+      e.target.value = '';
+    });
+  }
+
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', () => {
+      if (!editingId) return;
+      if (!confirm('Bu yazıyı sil?')) return;
+      const posts = getPosts().filter(p => p.id !== editingId);
+      setPosts(posts);
+      toast('Silindi');
+      closeEditor();
+    });
+  }
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = fTitle.value.trim();
+      if (!title) { toast('Başlık gerekli', 'warn'); fTitle.focus(); return; }
+      const post = {
+        id: editingId || ('post_' + Date.now().toString(36)),
+        title,
+        date: fDate.value.trim() || new Date().toISOString().slice(0, 10),
+        excerpt: fExcerpt.value.trim(),
+        image: fImage.value.trim(),
+        content: maybeAutoParagraph(fContent.value),
+      };
+      const posts = getPosts();
+      if (editingId) {
+        const idx = posts.findIndex(p => p.id === editingId);
+        if (idx >= 0) posts[idx] = post; else posts.push(post);
+      } else {
+        posts.push(post);
+      }
+      setPosts(posts);
+      toast('Kaydedildi · canlıya almak için "Yayına al"');
+      closeEditor();
+    });
+  }
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === CONTENT_KEY) refreshBlogList();
+  });
+
+  refreshBlogList();
 })();

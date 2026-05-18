@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-05-18T11:45:49.831Z",
+  "updatedAt": "2026-05-18T11:53:11.844Z",
   "brand": {
     "word": "",
     "subtitle": "Mimarlık & İnşaat",
@@ -523,9 +523,7 @@
     "cookies": "<p><strong>Son Güncelleme Tarihi: </strong>18 Mayıs 2026</p><p>Bu çerez politikası, Ar.civ Mimarlık &amp; İnşaat web sitesinde kullanılan çerezler hakkında bilgi vermek amacıyla hazırlanmıştır.</p><h3><strong>1. Çerez Nedir?</strong></h3><p>Çerezler, ziyaret ettiğiniz internet siteleri tarafından cihazınıza kaydedilen küçük veri dosyalarıdır. Çerezler sayesinde web sitesi daha verimli çalışabilir ve kullanıcı deneyimi geliştirilebilir.</p><h3><strong>2. Kullanılan Çerez Türleri</strong></h3><p>Web sitemizde aşağıdaki çerez türleri kullanılabilir:</p><h4>Zorunlu Çerezler</h4><p>Web sitesinin temel işlevlerinin çalışması için gereklidir.</p><h4>Performans ve Analitik Çerezleri</h4><p>Kullanıcıların siteyi nasıl kullandığını analiz ederek performans geliştirmeleri yapılmasını sağlar.</p><h4>İşlevsel Çerezler</h4><p>Kullanıcı tercihlerini hatırlayarak daha kişiselleştirilmiş bir deneyim sunar.</p><h4>Pazarlama ve Reklam Çerezleri</h4><p>Kullanıcılara ilgi alanlarına uygun içerik ve reklam gösterilmesine yardımcı olabilir.</p><h3><strong>3. Kullanılan Hizmetler</strong></h3><p>Web sitemizde aşağıdaki servisler çerez kullanabilir:</p><ol><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>Google Analytics</li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>Google Maps</li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>Meta Pixel</li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>YouTube gömülü içerikleri</li><li data-list=\"bullet\"><span class=\"ql-ui\" contenteditable=\"false\"></span>Sosyal medya bağlantıları</li></ol><h3><strong>4. Çerezlerin Yönetilmesi</strong></h3><p>Kullanıcılar tarayıcı ayarları üzerinden çerezleri silebilir veya engelleyebilir. Ancak bazı çerezlerin devre dışı bırakılması web sitesinin bazı işlevlerinin düzgün çalışmamasına neden olabilir.</p><h3><strong>5. Politika Güncellemeleri</strong></h3><p>Şirketimiz gerekli gördüğü durumlarda çerez politikasında değişiklik yapma hakkını saklı tutar. Güncel politika web sitesi üzerinden yayınlandığı tarihte yürürlüğe girer.</p>"
   },
   "nav": {},
-  "media": {
-    "heroVideo": "https://res.cloudinary.com/dyziop2ef/video/upload/v1779104640/0518_sneru4.mp4"
-  },
+  "media": {},
   "analytics": {
     "gaId": ""
   }

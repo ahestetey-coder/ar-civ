@@ -1042,6 +1042,12 @@
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         const fd = new FormData(form);
+        /* Honeypot — real users never fill this; bots usually do */
+        if (String(fd.get('_gotcha') || '').trim()) {
+          /* Silently pretend success so the bot moves on */
+          form.reset();
+          return;
+        }
         const name    = String(fd.get('name')    || '').trim();
         const phone   = String(fd.get('phone')   || '').trim();
         const message = String(fd.get('message') || '').trim();

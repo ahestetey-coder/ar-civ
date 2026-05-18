@@ -16,11 +16,26 @@
    ──────────────────────────────────────────────────────────────────── */
 
 const GITHUB_API = 'https://api.github.com';
+const { check, getClientIp, _scheduleReap } = require('./_rate-limit.js');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  /* Per-IP rate limit: 30 publishes per 10 minutes. Each publish does
+     up to 3 GitHub API commits, so this caps round-trips at ~90/10min
+     well inside the GitHub PAT rate limit (5000/hr). */
+  const ip = getClientIp(req);
+  const limit = check({ key: 'publish', ip, windowMs: 10 * 60 * 1000, max: 30 });
+  _scheduleReap();
+  if (!limit.ok) {
+    const secs = Math.ceil(limit.retryAfterMs / 1000);
+    res.setHeader('Retry-After', String(secs));
+    return res.status(429).json({
+      error: `Çok sık yayın denemesi. ${Math.ceil(secs / 60)} dakika sonra tekrar dene.`,
+    });
   }
 
   const { GITHUB_TOKEN, GITHUB_REPO, ADMIN_PASSWORD } = process.env;

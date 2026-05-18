@@ -11,6 +11,7 @@
    ──────────────────────────────────────────────────────────────────── */
 
 const crypto = require('crypto');
+const { check, getClientIp, _scheduleReap } = require('./_rate-limit.js');
 
 const COOKIE_NAME = 'arciv_auth';
 const TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000; /* 7 days */
@@ -19,6 +20,19 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  /* Per-IP rate limit: 10 attempts per 15 minutes. Real users won't
+     come anywhere near; brute-forcers hit the wall fast. */
+  const ip = getClientIp(req);
+  const limit = check({ key: 'admin-auth', ip, windowMs: 15 * 60 * 1000, max: 10 });
+  _scheduleReap();
+  if (!limit.ok) {
+    const secs = Math.ceil(limit.retryAfterMs / 1000);
+    res.setHeader('Retry-After', String(secs));
+    return res.status(429).json({
+      error: `Çok fazla deneme. ${Math.ceil(secs / 60)} dakika sonra tekrar dene.`,
+    });
   }
 
   const { ADMIN_PASSWORD } = process.env;
@@ -31,7 +45,7 @@ module.exports = async function handler(req, res) {
 
   if (!password || password !== ADMIN_PASSWORD) {
     /* Tiny delay to slow down brute-force attempts */
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise(r => setTimeout(r, 400));
     return res.status(401).json({ error: 'Geçersiz şifre' });
   }
 

@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin.html
+Disallow: /login.html
+Disallow: /api/
+Allow: /
+
+# Allow crawlers full access to public content

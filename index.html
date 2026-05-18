@@ -469,6 +469,8 @@
               <p data-edit-key="contact.cta.body">İki paragraf yeterli — ölçek, konum, hayalini kurduğunuz mekânın bir kelimesi.</p>
             </div>
             <form class="contact__form" id="contactForm" novalidate>
+              <!-- Honeypot: real users never see this field, bots will fill it -->
+              <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none" />
               <div class="contact__form__row">
                 <label class="contact__field">
                   <span>Ad Soyad</span>

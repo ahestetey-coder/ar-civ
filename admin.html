@@ -438,6 +438,27 @@
           <span class="hint">Google arama sonuçlarında başlığın altındaki açıklama. ~155 karakter sığar.</span>
         </div>
 
+        <!-- Social share preview image (Open Graph / Twitter Card) -->
+        <div class="field">
+          <label for="bf-og">Sosyal medya paylaşım görseli URL'si</label>
+          <div class="combo">
+            <input id="bf-og" type="url" placeholder="https://... 1200×630 jpg/png" spellcheck="false" />
+            <label class="upload" for="bf-og-upload">
+              <input id="bf-og-upload" type="file" accept="image/*" hidden />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <span>Bilgisayardan</span>
+            </label>
+          </div>
+          <span class="hint">Linki Facebook/LinkedIn/WhatsApp'a yapıştırınca çıkan büyük önizleme görseli. Önerilen boyut 1200×630 px. Boş bırakırsan paylaşımlarda görsel olmaz.</span>
+        </div>
+
+        <!-- Google Analytics 4 Measurement ID -->
+        <div class="field">
+          <label for="bf-ga">Google Analytics 4 — Measurement ID (opsiyonel)</label>
+          <input id="bf-ga" type="text" placeholder="G-XXXXXXXXXX" spellcheck="false" />
+          <span class="hint">Trafik ölçümü istersen analytics.google.com → Veri Akışı → Measurement ID (G-… ile başlar). Boş bırakırsan hiçbir takip script'i yüklenmez.</span>
+        </div>
+
         <!-- Hero video (scroll-scrub clip behind the title) -->
         <div class="field">
           <label for="bf-hero-video">Hero videosu URL'si (kaydırmalı animasyon)</label>

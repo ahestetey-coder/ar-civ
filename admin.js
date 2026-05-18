@@ -700,6 +700,9 @@
   const brandForm     = $('brandForm');
   const bfTitle       = $('bf-title');
   const bfDescription = $('bf-description');
+  const bfOg          = $('bf-og');
+  const bfOgUpload    = $('bf-og-upload');
+  const bfGa          = $('bf-ga');
   const bfHeroVideo   = $('bf-hero-video');
   const bfLogo        = $('bf-logo');
   const bfLogoUpload  = $('bf-logo-upload');
@@ -846,8 +849,11 @@
     const meta  = (content && content.meta)  || {};
     const nav   = (content && content.nav)   || {};
     const media = (content && content.media) || {};
+    const analytics = (content && content.analytics) || {};
     if (bfTitle)       bfTitle.value       = meta.title       || '';
     if (bfDescription) bfDescription.value = meta.description || '';
+    if (bfOg)          bfOg.value          = meta.ogImage     || '';
+    if (bfGa)          bfGa.value          = analytics.gaId   || '';
     if (bfHeroVideo)   bfHeroVideo.value   = media.heroVideo  || '';
     if (bfLogo)        bfLogo.value        = brand.logoUrl    || '';
     if (bfFavicon)     bfFavicon.value     = brand.faviconUrl || '';
@@ -877,6 +883,7 @@
   }
   attachBrandUpload(bfLogoUpload,    bfLogo,    bfLogoPreview,    1.5);
   attachBrandUpload(bfFaviconUpload, bfFavicon, bfFaviconPreview, 0.5);
+  attachBrandUpload(bfOgUpload,      bfOg,      null,             1.5);
 
   if (brandForm) {
     brandForm.addEventListener('submit', (e) => {
@@ -886,8 +893,11 @@
       content.meta  = content.meta  || {};
       content.nav   = content.nav   || {};
       content.media = content.media || {};
+      content.analytics = content.analytics || {};
       content.meta.title       = (bfTitle && bfTitle.value || '').trim();
       content.meta.description = (bfDescription && bfDescription.value || '').trim();
+      content.meta.ogImage     = (bfOg && bfOg.value || '').trim();
+      content.analytics.gaId   = (bfGa && bfGa.value || '').trim();
       content.brand.logoUrl    = (bfLogo.value || '').trim();
       content.brand.faviconUrl = (bfFavicon.value || '').trim();
       const heroVideo = (bfHeroVideo && bfHeroVideo.value || '').trim();

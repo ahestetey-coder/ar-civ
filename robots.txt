@@ -4,4 +4,4 @@ Disallow: /login.html
 Disallow: /api/
 Allow: /
 
-# Allow crawlers full access to public content
+Sitemap: https://ar-civ.vercel.app/sitemap.xml

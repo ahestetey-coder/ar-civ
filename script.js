@@ -737,9 +737,103 @@
     hydrateContact(content);
     hydrateHeroVideo(content);
     hydrateBlog(content);
+    hydrateSEO(content);
     /* Hydration may have just written 'İletişim — 08' from a stale content.json;
        re-sync the contact-kicker number based on the actual social section state. */
     if (typeof window.__syncContactNum === 'function') window.__syncContactNum();
+  }
+
+  /* ── SEO: JSON-LD + Google Analytics 4 (optional, admin-controlled) ──
+     Rewrites the existing #ld-org script with live admin values for
+     name, telephone, address, social profiles, and (optionally) injects
+     GA4 if content.analytics.gaId is set. */
+  function hydrateSEO(content) {
+    const meta = (content && content.meta) || {};
+    const contact = (content && content.contact) || {};
+    const brand = (content && content.brand) || {};
+    const social = (contact && contact.social) || {};
+    const analytics = (content && content.analytics) || {};
+    const ldOrg = document.getElementById('ld-org');
+
+    if (ldOrg) {
+      const sameAs = [];
+      const socialBases = {
+        instagram: 'https://instagram.com/',
+        twitter:   'https://x.com/',
+        pinterest: 'https://pinterest.com/',
+        youtube:   'https://youtube.com/@',
+        linkedin:  'https://linkedin.com/in/',
+      };
+      Object.keys(socialBases).forEach(k => {
+        const v = (social[k] || '').trim();
+        if (!v) return;
+        sameAs.push(/^https?:\/\//i.test(v) ? v : socialBases[k] + v.replace(/^@/, '').replace(/^\//, ''));
+      });
+
+      const graph = [
+        {
+          '@type': 'ProfessionalService',
+          '@id': location.origin + '/#org',
+          'name': brand.word || 'AR-CİV',
+          'url': location.origin + '/',
+          'description': meta.description || 'Mimarlık ve inşaat atölyesi — İstanbul',
+          'logo': brand.logoUrl || undefined,
+          'image': meta.ogImage || brand.logoUrl || undefined,
+          'address': contact.studio && contact.studio.address ? {
+            '@type': 'PostalAddress',
+            'streetAddress': String(contact.studio.address).replace(/<br\s*\/?>/gi, ', ').replace(/<[^>]+>/g, '').trim(),
+            'addressCountry': 'TR'
+          } : undefined,
+          'telephone': contact.whatsapp || undefined,
+          'sameAs': sameAs.length ? sameAs : undefined,
+          'areaServed': 'İstanbul'
+        },
+        {
+          '@type': 'WebSite',
+          '@id': location.origin + '/#website',
+          'url': location.origin + '/',
+          'name': brand.word || 'AR-CİV',
+          'inLanguage': 'tr-TR',
+          'publisher': { '@id': location.origin + '/#org' }
+        }
+      ];
+      try {
+        ldOrg.textContent = JSON.stringify({
+          '@context': 'https://schema.org',
+          '@graph': graph.map(strip)
+        }, null, 2);
+      } catch (_) {}
+    }
+
+    /* GA4 injection — only if admin provided a Measurement ID like 'G-XXXXXXX' */
+    const gaId = (analytics.gaId || '').trim();
+    if (gaId && /^G-[A-Z0-9]+$/.test(gaId) && !document.getElementById('ga4-loader')) {
+      const s1 = document.createElement('script');
+      s1.async = true;
+      s1.id = 'ga4-loader';
+      s1.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(gaId);
+      document.head.appendChild(s1);
+      const s2 = document.createElement('script');
+      s2.textContent =
+        'window.dataLayer=window.dataLayer||[];' +
+        'function gtag(){dataLayer.push(arguments);}' +
+        'gtag("js", new Date());' +
+        'gtag("config", ' + JSON.stringify(gaId) + ', {anonymize_ip: true});';
+      document.head.appendChild(s2);
+    }
+  }
+  /* Recursively drop undefined values from objects so JSON-LD stays clean */
+  function strip(obj) {
+    if (Array.isArray(obj)) return obj.map(strip);
+    if (obj && typeof obj === 'object') {
+      const out = {};
+      Object.keys(obj).forEach(k => {
+        const v = strip(obj[k]);
+        if (v !== undefined) out[k] = v;
+      });
+      return out;
+    }
+    return obj;
   }
 
   /* ── Blog: topbar link visibility + post rendering on /blog.html ──

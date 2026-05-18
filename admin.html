@@ -83,6 +83,10 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
         <span>Blog</span>
       </button>
+      <button type="button" class="adtab" role="tab" aria-selected="false" data-tab="legal" id="adtabLegal">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        <span>Yasal</span>
+      </button>
     </div>
   </nav>
 
@@ -660,6 +664,39 @@
         <div class="form__actions">
           <button type="button" id="blogDeleteBtn" class="btn btn--danger" hidden>Sil</button>
           <button type="button" id="blogCancelBtn" class="btn btn--ghost">Vazgeç</button>
+          <button type="submit" class="btn btn--primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+            <span>Kaydet</span>
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- ────────── LEGAL TAB ────────── -->
+  <main class="admin__shell adtabpanel" id="tabLegal" role="tabpanel" aria-labelledby="adtabLegal" hidden>
+    <section class="adcard">
+      <header class="adcard__head">
+        <span class="kicker kicker--accent">Yasal</span>
+        <h2>Gizlilik, KVKK, çerez politikaları.</h2>
+        <p class="muted">Üç yasal metni Rich-text editörle hazırla. Site footer'ındaki Gizlilik / KVKK / Çerezler bağlantıları yasal.html üzerindeki ilgili bölüme atlar.</p>
+      </header>
+
+      <form id="legalForm" class="form" autocomplete="off">
+        <div class="field">
+          <label>1 · Gizlilik Politikası</label>
+          <div id="lgl-privacy-editor" class="rte"></div>
+        </div>
+        <div class="field">
+          <label>2 · KVKK Aydınlatma Metni</label>
+          <div id="lgl-kvkk-editor" class="rte"></div>
+        </div>
+        <div class="field">
+          <label>3 · Çerez Politikası</label>
+          <div id="lgl-cookies-editor" class="rte"></div>
+        </div>
+
+        <div class="form__actions">
           <button type="submit" class="btn btn--primary">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
             <span>Kaydet</span>

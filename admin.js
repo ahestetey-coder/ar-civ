@@ -686,11 +686,13 @@
   const tabBrand  = $('adtabBrand');
   const tabContact= $('adtabContact');
   const tabBlog   = $('adtabBlog');
+  const tabLegal  = $('adtabLegal');
   const panelProj = $('tabProjects');
   const panelSoc  = $('tabSocial');
   const panelBrand= $('tabBrand');
   const panelContact = $('tabContact');
   const panelBlog = $('tabBlog');
+  const panelLegal= $('tabLegal');
   const footProj  = $('adminfootProjects');
   const footSoc   = document.querySelector('#tabSocial .adminfoot');
 
@@ -806,8 +808,8 @@
 
   /* ── Tab switching ───────────────────────────── */
   function activate(tab) {
-    const tabs = { projects: tabProj, social: tabSoc, brand: tabBrand, contact: tabContact, blog: tabBlog };
-    const panels = { projects: panelProj, social: panelSoc, brand: panelBrand, contact: panelContact, blog: panelBlog };
+    const tabs = { projects: tabProj, social: tabSoc, brand: tabBrand, contact: tabContact, blog: tabBlog, legal: tabLegal };
+    const panels = { projects: panelProj, social: panelSoc, brand: panelBrand, contact: panelContact, blog: panelBlog, legal: panelLegal };
     Object.entries(tabs).forEach(([k, btn]) => {
       if (!btn) return;
       const on = (k === tab);
@@ -819,7 +821,8 @@
     if (footSoc)  footSoc.style.display  = (tab === 'social')   ? 'block' : 'none';
     if (tab === 'brand')   refreshBrandForm();
     if (tab === 'contact') refreshContactForm();
-    if (tab === 'blog' && typeof refreshBlogList === 'function') refreshBlogList();
+    if (tab === 'blog'  && typeof refreshBlogList  === 'function') refreshBlogList();
+    if (tab === 'legal' && typeof refreshLegalForm === 'function') refreshLegalForm();
     try { localStorage.setItem('strata.adminTab', tab); } catch (_) {}
   }
   tabProj.addEventListener('click', () => activate('projects'));
@@ -827,6 +830,7 @@
   if (tabBrand)   tabBrand.addEventListener('click',   () => activate('brand'));
   if (tabContact) tabContact.addEventListener('click', () => activate('contact'));
   if (tabBlog)    tabBlog.addEventListener('click',    () => activate('blog'));
+  if (tabLegal)   tabLegal.addEventListener('click',   () => activate('legal'));
 
   /* ── Brand tab: logo + favicon uploads ──────── */
   function applyBrandPreview(input, previewBox) {
@@ -1358,7 +1362,7 @@
 
     /* restore last active tab */
     const lastTab = (() => { try { return localStorage.getItem('strata.adminTab'); } catch (_) { return null; } })();
-    const validTab = ['projects', 'social', 'brand', 'contact', 'blog'].includes(lastTab) ? lastTab : 'projects';
+    const validTab = ['projects', 'social', 'brand', 'contact', 'blog', 'legal'].includes(lastTab) ? lastTab : 'projects';
     activate(validTab);
   })();
 
@@ -1742,4 +1746,84 @@
   });
 
   refreshBlogList();
+})();
+
+
+/* ════════════════════════════════════════════════════════════════════
+   LEGAL TAB — three Quill rich-text editors backed by content.legal.
+   ════════════════════════════════════════════════════════════════════ */
+(() => {
+  const CONTENT_KEY = 'strata.content';
+  const $ = (id) => document.getElementById(id);
+  const form = $('legalForm');
+  if (!form) return;
+
+  const toastEl = $('toast');
+  function toast(msg, kind) {
+    if (!toastEl) return;
+    toastEl.className = 'toast ' + (kind === 'error' ? 'is-error' : kind === 'warn' ? 'is-warn' : '');
+    toastEl.textContent = msg;
+    requestAnimationFrame(() => toastEl.classList.add('is-on'));
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => toastEl.classList.remove('is-on'), 2800);
+  }
+  function readContent() {
+    try { const raw = localStorage.getItem(CONTENT_KEY); return raw ? JSON.parse(raw) : {}; }
+    catch (_) { return {}; }
+  }
+  function writeContent(c) {
+    c.updatedAt = new Date().toISOString();
+    localStorage.setItem(CONTENT_KEY, JSON.stringify(c));
+  }
+
+  const TOOLBAR = [
+    [{ header: [2, 3, false] }],
+    ['bold', 'italic', 'underline'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['blockquote', 'link'],
+    ['clean'],
+  ];
+
+  const quills = { privacy: null, kvkk: null, cookies: null };
+  function ensureQuills() {
+    if (typeof Quill === 'undefined') return false;
+    const elPriv = $('lgl-privacy-editor');
+    const elKvkk = $('lgl-kvkk-editor');
+    const elCook = $('lgl-cookies-editor');
+    if (!quills.privacy && elPriv) quills.privacy = new Quill(elPriv, { theme: 'snow', modules: { toolbar: TOOLBAR } });
+    if (!quills.kvkk    && elKvkk) quills.kvkk    = new Quill(elKvkk, { theme: 'snow', modules: { toolbar: TOOLBAR } });
+    if (!quills.cookies && elCook) quills.cookies = new Quill(elCook, { theme: 'snow', modules: { toolbar: TOOLBAR } });
+    return !!(quills.privacy && quills.kvkk && quills.cookies);
+  }
+  document.addEventListener('DOMContentLoaded', ensureQuills);
+  ensureQuills();
+
+  function refreshLegalForm() {
+    if (!ensureQuills()) return;
+    const c = readContent();
+    const l = (c && c.legal) || {};
+    quills.privacy.root.innerHTML = l.privacy || '';
+    quills.kvkk.root.innerHTML    = l.kvkk    || '';
+    quills.cookies.root.innerHTML = l.cookies || '';
+  }
+  window.refreshLegalForm = refreshLegalForm;
+
+  function isEmptyHtml(html) {
+    return /^(\s|<p>\s*(<br\s*\/?>)?\s*<\/p>)*$/.test(String(html || ''));
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!ensureQuills()) return;
+    const c = readContent();
+    c.legal = c.legal || {};
+    const p = quills.privacy.root.innerHTML;
+    const k = quills.kvkk.root.innerHTML;
+    const co = quills.cookies.root.innerHTML;
+    c.legal.privacy = isEmptyHtml(p) ? '' : p;
+    c.legal.kvkk    = isEmptyHtml(k) ? '' : k;
+    c.legal.cookies = isEmptyHtml(co) ? '' : co;
+    writeContent(c);
+    toast('Yasal metinler kaydedildi · canlıya almak için "Yayına al"');
+  });
 })();

@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="light" />
-  <title data-edit-key="meta.titleBlog">Blog — AR-CİV</title>
-  <meta name="description" data-edit-key="meta.description" data-edit-attr="content" content="AR-CİV blog — atölyenin günce ve yazıları." />
+  <title data-edit-key="meta.titleLegal">Yasal — AR-CİV</title>
+  <meta name="description" data-edit-key="meta.description" data-edit-attr="content" content="AR-CİV — Gizlilik, KVKK ve çerez politikaları." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -55,7 +55,7 @@
         <a href="index.html#process"  data-edit-key="nav.process">Süreç</a>
         <a href="index.html#studio"   data-edit-key="nav.studio">Atölye</a>
         <a href="index.html#social"   data-link="social" data-edit-key="nav.social">Günlük</a>
-        <a href="blog.html"           data-link="blog"   data-edit-key="nav.blog" class="is-current">Blog</a>
+        <a href="blog.html"           data-link="blog"   data-edit-key="nav.blog">Blog</a>
       </nav>
       <a class="btn btn--ghost" href="index.html#contact">
         <span>İletişim</span>
@@ -64,19 +64,48 @@
     </div>
   </header>
 
-  <main id="main" class="bloglist">
-    <header class="bloglist__head section__head reveal">
-      <span class="kicker kicker--accent" data-edit-key="blog.kicker">Günce</span>
-      <h1 class="display-h" data-edit-key="blog.title">Blog.</h1>
-      <p class="muted" data-edit-key="blog.intro">Atölyenin günce ve yazıları — saha notları, kararlar, kısa düşünceler.</p>
+  <main id="main" class="legal">
+    <header class="legal__head section__head">
+      <span class="kicker kicker--accent">Yasal</span>
+      <h1 class="display-h">Politikalar.</h1>
+      <p class="muted">Gizlilik, KVKK ve çerez politikalarımız aşağıda. Sorularınız için iletişim bölümünden bize ulaşabilirsiniz.</p>
     </header>
 
-    <div class="bloglist__feed" id="blogFeed" aria-live="polite"></div>
+    <nav class="legal__toc" aria-label="Yasal başlıkları">
+      <a href="#gizlilik">Gizlilik Politikası</a>
+      <a href="#kvkk">KVKK Aydınlatma Metni</a>
+      <a href="#cerezler">Çerez Politikası</a>
+    </nav>
 
-    <p class="bloglist__empty" id="blogEmpty" hidden>
-      <span>Henüz yazı yok.</span>
-      <a class="link" href="index.html">← Ana sayfa</a>
-    </p>
+    <section class="legal__section" id="gizlilik">
+      <header class="legal__section__head">
+        <span class="kicker">Gizlilik — 01</span>
+        <h2>Gizlilik Politikası</h2>
+      </header>
+      <div class="legal__body" id="legal-privacy" data-edit-key="legal.privacy" data-edit-html="1">
+        <p class="muted">Henüz içerik eklenmedi. Admin panelinden "Yasal" sekmesini açıp metni düzenleyebilirsin.</p>
+      </div>
+    </section>
+
+    <section class="legal__section" id="kvkk">
+      <header class="legal__section__head">
+        <span class="kicker">KVKK — 02</span>
+        <h2>KVKK Aydınlatma Metni</h2>
+      </header>
+      <div class="legal__body" id="legal-kvkk" data-edit-key="legal.kvkk" data-edit-html="1">
+        <p class="muted">Henüz içerik eklenmedi. Admin panelinden "Yasal" sekmesini açıp metni düzenleyebilirsin.</p>
+      </div>
+    </section>
+
+    <section class="legal__section" id="cerezler">
+      <header class="legal__section__head">
+        <span class="kicker">Çerezler — 03</span>
+        <h2>Çerez Politikası</h2>
+      </header>
+      <div class="legal__body" id="legal-cookies" data-edit-key="legal.cookies" data-edit-html="1">
+        <p class="muted">Henüz içerik eklenmedi. Admin panelinden "Yasal" sekmesini açıp metni düzenleyebilirsin.</p>
+      </div>
+    </section>
   </main>
 
   <footer class="foot">

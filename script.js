@@ -144,7 +144,36 @@
   const PROFILE_URL = 'https://instagram.com/strata.studio';
 
   const grid = document.getElementById('journalGrid');
-  if (!grid) return;
+
+  /* When this script runs on a page that does NOT have the social
+     grid (e.g. blog.html, yasal.html), we still need to toggle the
+     'Günlük' nav link based on whether any posts exist. Do a lean
+     load-and-toggle path and return; skip the full render. */
+  if (!grid) {
+    (async () => {
+      try {
+        const local = readLocalPostsLean();
+        if (local && local.length) { toggleNavSocial(true); return; }
+        const res = await fetch('media/posts.json', { cache: 'no-cache' });
+        if (!res.ok) { toggleNavSocial(false); return; }
+        const json = await res.json();
+        const raw = Array.isArray(json) ? json : (json.posts || json.data || []);
+        toggleNavSocial(raw.filter(p => p && (p.thumbnail_url || p.media_url || p.url)).length > 0);
+      } catch (_) { toggleNavSocial(false); }
+    })();
+    return;
+  }
+
+  function readLocalPostsLean() {
+    try {
+      const raw = localStorage.getItem('strata.posts');
+      const parsed = raw ? JSON.parse(raw) : null;
+      return Array.isArray(parsed) ? parsed : null;
+    } catch (_) { return null; }
+  }
+  function toggleNavSocial(on) {
+    document.querySelectorAll('[data-link="social"]').forEach(el => { el.hidden = !on; });
+  }
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

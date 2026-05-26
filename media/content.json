@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updatedAt": "2026-05-26T05:39:13.235Z",
+  "updatedAt": "2026-05-26T05:40:30.630Z",
   "brand": {
     "word": "",
     "subtitle": "MİMARLIK & İNŞAAT",
@@ -130,6 +130,10 @@
       {
         "url": "https://picsum.photos/seed/camlica-5-havuz/1600/1000",
         "caption": "Yatay havuz — gece görünümü"
+      },
+      {
+        "url": "https://pub-4d6c7813e18247999930a553ce36c745.r2.dev/uploads/2026/05/5c1e373577-kaleici0003.jpg",
+        "caption": ""
       }
     ],
     "type": "",

@@ -455,9 +455,16 @@
 
         <!-- Hero video (scroll-scrub clip behind the title) -->
         <div class="field">
-          <label for="bf-hero-video">Hero videosu URL'si (kaydırmalı animasyon)</label>
-          <input id="bf-hero-video" name="heroVideo" type="url" placeholder="https://... .mp4 (Cloudflare R2, Bunny CDN, GitHub Releases, …)" spellcheck="false" />
-          <span class="hint">Doğrudan .mp4 linki yapıştır. Boş bırakırsan varsayılan (media/hero.mp4) geri gelir. Tipik hero videolar 20-50 MB olduğu için JSON içine gömmek yerine harici barındırma kullanırız — Cloudflare R2 (10 GB ücretsiz), GitHub Releases ve Bunny CDN iyi seçenekler.</span>
+          <label for="bf-hero-video">Hero videosu (kaydırmalı animasyon)</label>
+          <div class="combo">
+            <input id="bf-hero-video" name="heroVideo" type="url" placeholder="https://... .mp4 veya boş bırakıp dosya yükle" spellcheck="false" />
+            <label class="upload" for="bf-hero-video-upload">
+              <input id="bf-hero-video-upload" type="file" accept="video/*" hidden />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <span>Bilgisayardan</span>
+            </label>
+          </div>
+          <span class="hint">Direkt yükle (R2'ye gider) veya hazır .mp4 URL'si yapıştır. Boş bırakırsan varsayılan (media/hero.mp4) geri gelir. Maks 500 MB — ama 20-50 MB ideal: daha büyükleri ziyaretçi yüklemez.</span>
         </div>
 
         <!-- Logo -->

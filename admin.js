@@ -6,6 +6,98 @@
    Site CSS uses these vars to position the image so the crop region exactly fills the cell. */
 
 /* ════════════════════════════════════════════════════════════════════
+   R2 UPLOAD — every "Bilgisayardan" button below routes through this.
+   Browser asks /api/upload-url for a presigned PUT URL, then PUTs the
+   file straight to Cloudflare R2. Public URL goes into content.json
+   instead of a base64 blob, so the JSON stays small and the site loads
+   fast.
+
+   Usage:  const { publicUrl } = await window.__arcivUpload(file, {
+             onProgress: (pct) => toast(`Yükleniyor… ${pct}%`),
+           });
+   Throws on failure with a user-readable Turkish message.
+   ════════════════════════════════════════════════════════════════════ */
+(() => {
+  async function uploadToR2(file, opts) {
+    opts = opts || {};
+    if (!file || !(file instanceof Blob)) {
+      throw new Error('Dosya bulunamadı');
+    }
+    const presignRes = await fetch('/api/upload-url', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        filename: file.name || 'upload',
+        contentType: file.type || 'application/octet-stream',
+        size: file.size,
+      }),
+    });
+    if (presignRes.status === 401) {
+      throw new Error('Oturum süresi doldu — sayfayı yenile ve tekrar giriş yap');
+    }
+    if (!presignRes.ok) {
+      const data = await presignRes.json().catch(() => ({}));
+      throw new Error(data.error || ('Presign başarısız (' + presignRes.status + ')'));
+    }
+    const data = await presignRes.json();
+    const { uploadUrl, publicUrl, key } = data;
+    if (!uploadUrl || !publicUrl) {
+      throw new Error('Sunucu geçersiz yanıt verdi (uploadUrl eksik)');
+    }
+
+    await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('PUT', uploadUrl, true);
+      xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+      if (typeof opts.onProgress === 'function') {
+        xhr.upload.addEventListener('progress', (e) => {
+          if (e.lengthComputable) {
+            opts.onProgress(Math.round((e.loaded / e.total) * 100));
+          }
+        });
+      }
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) return resolve();
+        reject(new Error('R2 PUT ' + xhr.status + ': ' + (xhr.responseText || 'yükleme reddedildi')));
+      };
+      xhr.onerror = () => reject(new Error('R2 ağ hatası — bağlantını kontrol et'));
+      xhr.onabort = () => reject(new Error('Yükleme iptal edildi'));
+      if (opts.signal) {
+        opts.signal.addEventListener('abort', () => xhr.abort(), { once: true });
+      }
+      xhr.send(file);
+    });
+
+    return { publicUrl, key };
+  }
+
+  /* Simple wrapper that handles toast feedback for callers that just
+     want "pick file → get URL back" without managing UI themselves. */
+  async function uploadWithToast(file, toastFn, label) {
+    const tag = label ? (label + ' · ') : '';
+    if (typeof toastFn === 'function') toastFn(tag + 'Yükleniyor… 0%');
+    try {
+      const { publicUrl } = await uploadToR2(file, {
+        onProgress: (pct) => {
+          if (typeof toastFn === 'function') toastFn(tag + 'Yükleniyor… ' + pct + '%');
+        },
+      });
+      if (typeof toastFn === 'function') toastFn(tag + 'Yüklendi ✓');
+      return publicUrl;
+    } catch (err) {
+      if (typeof toastFn === 'function') {
+        toastFn('Yükleme hatası: ' + (err.message || err), 'error');
+      }
+      throw err;
+    }
+  }
+
+  window.__arcivUpload = uploadToR2;
+  window.__arcivUploadWithToast = uploadWithToast;
+})();
+
+/* ════════════════════════════════════════════════════════════════════
    LOGOUT — auth itself is enforced server-side by /middleware.js, so
    anyone hitting admin.html already passed the cookie check. The only
    client-side concern is wiring the "Çıkış" button to clear the cookie
@@ -333,21 +425,17 @@
   document.addEventListener('pointerup', endDrag);
   document.addEventListener('pointercancel', endDrag);
 
-  /* ── File upload → dataURL ───────────────────── */
-  uploadInput.addEventListener('change', (e) => {
+  /* ── File upload → R2 ────────────────────────── */
+  uploadInput.addEventListener('change', async (e) => {
     const file = e.target.files && e.target.files[0];
+    e.target.value = '';
     if (!file) return;
-    if (file.size > 1.5 * 1024 * 1024) {
-      toast('Görsel 1.5 MB üzerinde — küçült veya URL kullan', 'warn');
-    }
-    const r = new FileReader();
-    r.onload = (ev) => {
-      const dataUrl = ev.target.result;
-      imageInput.value = dataUrl;
+    try {
+      const url = await window.__arcivUploadWithToast(file, toast, 'Gönderi görseli');
+      imageInput.value = url;
       userTouchedCrop = false;
-      loadCropperImage(dataUrl);
-    };
-    r.readAsDataURL(file);
+      loadCropperImage(url);
+    } catch (_) { /* toast already shown */ }
   });
 
   imageInput.addEventListener('input', () => {
@@ -863,27 +951,40 @@
     applyBrandPreview(bfLogo,    bfLogoPreview);
     applyBrandPreview(bfFavicon, bfFaviconPreview);
   }
-  function attachBrandUpload(fileInput, urlInput, previewBox, sizeLimitMB) {
+  function attachBrandUpload(fileInput, urlInput, previewBox, sizeLimitMB, label) {
     if (!fileInput || !urlInput) return;
-    fileInput.addEventListener('change', (e) => {
+    fileInput.addEventListener('change', async (e) => {
       const file = e.target.files && e.target.files[0];
+      e.target.value = '';
       if (!file) return;
       if (file.size > sizeLimitMB * 1024 * 1024) {
-        toast(`Görsel ${sizeLimitMB} MB üzerinde — küçült veya URL kullan`, 'warn');
+        toast(`${label} ${sizeLimitMB} MB üzerinde — site hızı için küçültmeni öneririm`, 'warn');
       }
-      const r = new FileReader();
-      r.onload = (ev) => {
-        urlInput.value = ev.target.result;
+      try {
+        const url = await window.__arcivUploadWithToast(file, toast, label);
+        urlInput.value = url;
         applyBrandPreview(urlInput, previewBox);
-      };
-      r.readAsDataURL(file);
-      e.target.value = '';
+      } catch (_) { /* toast already shown */ }
     });
     urlInput.addEventListener('input', () => applyBrandPreview(urlInput, previewBox));
   }
-  attachBrandUpload(bfLogoUpload,    bfLogo,    bfLogoPreview,    1.5);
-  attachBrandUpload(bfFaviconUpload, bfFavicon, bfFaviconPreview, 0.5);
-  attachBrandUpload(bfOgUpload,      bfOg,      null,             1.5);
+  attachBrandUpload(bfLogoUpload,    bfLogo,    bfLogoPreview,    1.5, 'Logo');
+  attachBrandUpload(bfFaviconUpload, bfFavicon, bfFaviconPreview, 0.5, 'Favicon');
+  attachBrandUpload(bfOgUpload,      bfOg,      null,             1.5, 'OG görseli');
+
+  /* Hero video upload — direct to R2, no size guard (server enforces 500 MB) */
+  const bfHeroVideoUpload = $('bf-hero-video-upload');
+  if (bfHeroVideoUpload && bfHeroVideo) {
+    bfHeroVideoUpload.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      e.target.value = '';
+      if (!file) return;
+      try {
+        const url = await window.__arcivUploadWithToast(file, toast, 'Hero videosu');
+        bfHeroVideo.value = url;
+      } catch (_) { /* toast already shown */ }
+    });
+  }
 
   if (brandForm) {
     brandForm.addEventListener('submit', (e) => {
@@ -1179,14 +1280,14 @@
   }
 
   /* ── Cover upload ────────────────────────────── */
-  fCoverUp.addEventListener('change', (e) => {
+  fCoverUp.addEventListener('change', async (e) => {
     const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    if (file.size > 1.5 * 1024 * 1024) toast('Görsel 1.5 MB üzerinde — küçült veya URL kullan', 'warn');
-    const r = new FileReader();
-    r.onload = (ev) => { fCover.value = ev.target.result; };
-    r.readAsDataURL(file);
     e.target.value = '';
+    if (!file) return;
+    try {
+      const url = await window.__arcivUploadWithToast(file, toast, 'Kapak');
+      fCover.value = url;
+    } catch (_) { /* toast already shown */ }
   });
 
   /* ── Meta editor (featured only) ─────────────── */
@@ -1272,20 +1373,21 @@
     renderGallery();
   });
   fGalUrl.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); fGalAdd.click(); } });
-  fGalUp.addEventListener('change', (e) => {
+  fGalUp.addEventListener('change', async (e) => {
     const files = Array.from(e.target.files || []);
-    let oversized = 0;
-    files.forEach(file => {
-      if (file.size > 1.5 * 1024 * 1024) oversized++;
-      const r = new FileReader();
-      r.onload = (ev) => {
-        editingGallery.push({ url: ev.target.result, caption: '' });
-        renderGallery();
-      };
-      r.readAsDataURL(file);
-    });
-    if (oversized) toast(`${oversized} görsel 1.5 MB üzerinde — saklama kotanı zorlayabilir`, 'warn');
     e.target.value = '';
+    if (!files.length) return;
+    for (let i = 0; i < files.length; i++) {
+      const label = `Galeri ${i + 1}/${files.length}`;
+      try {
+        const url = await window.__arcivUploadWithToast(files[i], toast, label);
+        editingGallery.push({ url, caption: '' });
+        renderGallery();
+      } catch (_) {
+        /* toast shown; stop the batch so the user can decide */
+        break;
+      }
+    }
   });
 
   /* ── Save / Delete ───────────────────────────── */
@@ -1678,22 +1780,21 @@
   }
   /* Gallery: add via file upload */
   if (fGalUp) {
-    fGalUp.addEventListener('change', (e) => {
+    fGalUp.addEventListener('change', async (e) => {
       const files = Array.from(e.target.files || []);
+      e.target.value = '';
       if (!files.length) return;
       captureGalleryFromDOM();
-      let big = 0;
-      Promise.all(files.map(file => new Promise((res) => {
-        if (file.size > 1.5 * 1024 * 1024) big++;
-        const r = new FileReader();
-        r.onload = (ev) => res(ev.target.result);
-        r.readAsDataURL(file);
-      }))).then(urls => {
-        urls.forEach(u => editingImages.push(u));
-        if (big) toast(big + ' görsel 1.5 MB üzerinde — küçült veya URL kullan', 'warn');
-        renderGalleryRows();
-      });
-      e.target.value = '';
+      for (let i = 0; i < files.length; i++) {
+        const label = `Görsel ${i + 1}/${files.length}`;
+        try {
+          const url = await window.__arcivUploadWithToast(files[i], toast, label);
+          editingImages.push(url);
+          renderGalleryRows();
+        } catch (_) {
+          break;
+        }
+      }
     });
   }
   /* Gallery: delete one + sync URLs back to state on input */
